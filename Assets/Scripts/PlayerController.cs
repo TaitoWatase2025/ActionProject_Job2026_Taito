@@ -11,16 +11,20 @@ public class PlayerController : MonoBehaviour
     public float gravity = -9.81f;
     public float coyoteTime = 0.1f;     // 地面離れてもジャンプできる猶予
     public float jumpBufferTime = 0.1f; // ジャンプボタン押し猶予
+    [Header("回転速度")]
+    public float rotationSpeed = 10f;
 
     private float coyoteTimeCounter;
     private float jumpBufferCounter;
 
+    private Animation animations;
 
     public Transform cameraTransform;
 
     private CharacterController controller;
     private PlayerInput playerInput;
     private Vector2 moveInput;
+    
 
     private float verticalVelocity;
 
@@ -28,6 +32,8 @@ public class PlayerController : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
+        animations = GetComponent<Animation>();
+
     }
 
     private void OnEnable()
@@ -49,7 +55,6 @@ public class PlayerController : MonoBehaviour
         Move();
         //地面に接地しているかどうかのデバッグ表示
         Debug.Log("Is Grounded: " + controller.isGrounded);
-
     }
 
     private void Move()
@@ -70,7 +75,7 @@ public class PlayerController : MonoBehaviour
         if (move.sqrMagnitude > 0.01f)
         {
             Quaternion targetRotation = Quaternion.LookRotation(move.normalized);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10f * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
         // --- 接地猶予（Coyote Time） ---
         if (controller.isGrounded)
@@ -89,6 +94,7 @@ public class PlayerController : MonoBehaviour
             jumpBufferCounter -= Time.deltaTime;
         }
 
+
         // --- 重力 ---
         if (controller.isGrounded && verticalVelocity < 0)
             verticalVelocity = -2f;
@@ -104,6 +110,7 @@ public class PlayerController : MonoBehaviour
         controller.Move(move * speed * Time.deltaTime);
     }
 
+
     private void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
@@ -113,4 +120,5 @@ public class PlayerController : MonoBehaviour
     {
         jumpBufferCounter = jumpBufferTime;
     }
+    
 }

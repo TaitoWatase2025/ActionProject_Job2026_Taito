@@ -27,7 +27,7 @@ public class PlayerCamera : MonoBehaviour
         zoom = -offset.z;    // offset.z ‚É‡‚í‚¹‚ÄƒY[ƒ€‰Šú‰»
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         HandleInput();
         RotateAndFollow();
