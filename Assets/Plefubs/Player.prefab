@@ -928,7 +928,6 @@ GameObject:
   - component: {fileID: 2937174739126730667}
   - component: {fileID: 8690349223760523019}
   - component: {fileID: 7434660975901362413}
-  - component: {fileID: 8406962066525421788}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1126,21 +1125,8 @@ MonoBehaviour:
   jumpBufferTime: 0.1
   rotationSpeed: 10
   cameraTransform: {fileID: 0}
---- !u!114 &8406962066525421788
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3319250103939534823}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc31bee1681077747a917c5f596076a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimation
   anim: {fileID: 148126502097942101}
   playerTransform: {fileID: 197941885819539104}
-  controller: {fileID: 8690349223760523019}
 --- !u!1 &3514096657682051889
 GameObject:
   m_ObjectHideFlags: 0

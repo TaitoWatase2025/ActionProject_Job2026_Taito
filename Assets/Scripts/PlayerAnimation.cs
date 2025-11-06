@@ -27,8 +27,8 @@ public class PlayerAnimator : MonoBehaviour
 
         // Animator ‚É”½‰f
         anim.SetFloat("Speed", speed);
-        anim.SetBool("IsGrounded", controller.isGrounded);
-        anim.SetFloat("VerticalVelocity", controller.velocity.y);
+        //anim.SetBool("IsGrounded", controller.isGrounded);
+        //anim.SetFloat("VerticalVelocity", controller.velocity.y);
 
         previousPosition = playerTransform.position;
 
