@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    public enum PlayerState { Idle, Walking, Running, Jumping, Attacking }
+    public enum PlayerState { Idle, Walking, Running, Jumping, Attacking, Dodging }
     public PlayerState state = PlayerState.Idle;
 
     [Header("移動設定")]
@@ -12,30 +12,39 @@ public class PlayerController : MonoBehaviour
     public float sprintMultiplier = 1.5f;
     public float jumpForce = 5f;
     public float gravity = -9.81f;
-    public float coyoteTime = 0.1f;
-    public float jumpBufferTime = 0.1f;
+
+    [Header("回避設定")]
+    public float dodgeSpeed = 10f;
+    public float dodgeDuration = 0.5f;
+
     [Header("回転速度")]
     public float rotationSpeed = 10f;
 
-    private float coyoteTimeCounter;
-    private float jumpBufferCounter;
-
     private CharacterController controller;
     private Vector2 moveInput;
-    public Transform playerTransform;
+    private float verticalVelocity;
     public Transform cameraTransform;
+    public Transform playerTransform;
     public Animator anim;
 
-    private float verticalVelocity;
-    private Vector3 previousPosition;
-
-    // Input System
     private PlayerControls controls;
+    private Vector3 previousPosition;
 
     // コンボ攻撃用
     private int comboStep = 0;
     private int comboMax = 3;
     private bool comboInput = false;
+
+    // 回避用
+    private bool isDodging = false;
+    private Vector3 dodgeDirection;
+    private float dodgeTimer;
+
+    // ジャンプ用
+    private float coyoteTime = 0.1f;
+    private float jumpBufferTime = 0.1f;
+    private float coyoteTimeCounter;
+    private float jumpBufferCounter;
 
     private void Awake()
     {
@@ -44,34 +53,40 @@ public class PlayerController : MonoBehaviour
 
         controls = new PlayerControls();
 
-        // 移動入力
+        // 移動
         controls.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
         controls.Player.Move.canceled += ctx => moveInput = Vector2.zero;
 
-        // ジャンプ入力
+        // ジャンプ
         controls.Player.Jump.performed += ctx => jumpBufferCounter = jumpBufferTime;
 
-        // 攻撃入力
+        // 攻撃
         controls.Player.Attack.started += ctx => HandleAttackInput();
 
-        // スプリントはIsPressedで取得
+        // 回避
+        controls.Player.Dodge.started += ctx => HandleDodgeInput();
+
+        // スプリント（IsPressedで判定）
         controls.Player.Sprint.performed += ctx => { };
     }
 
     private void OnEnable() => controls.Player.Enable();
     private void OnDisable() => controls.Player.Disable();
 
-    private void Start() => previousPosition = playerTransform.position;
-
     private void Update()
     {
-        Move();
+        HandleJump();      // 先にジャンプ判定
+        HandleGravity();
+        HandleDodge();
+        HandleMove();
+        anim.SetBool("IsGrounded", controller.isGrounded);
         UpdateAnimator();
     }
 
-    private void Move()
+    #region 移動
+    private void HandleMove()
     {
-        if (state == PlayerState.Attacking) return; // 攻撃中は移動不可
+        if (state == PlayerState.Attacking || isDodging || state == PlayerState.Dodging) return;
         if (cameraTransform == null) return;
 
         Vector3 forward = cameraTransform.forward;
@@ -87,8 +102,28 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
         }
 
+        float speed = moveSpeed;
+        if (controls.Player.Sprint.IsPressed()) speed *= sprintMultiplier;
+
+        controller.Move(move * speed * Time.deltaTime);
+
+        // ジャンプ中や攻撃中は上書きしない
+        if (state != PlayerState.Jumping && state != PlayerState.Dodging && state != PlayerState.Attacking)
+            state = move.sqrMagnitude > 0.01f ? PlayerState.Walking : PlayerState.Idle;
+    }
+    #endregion
+
+    #region ジャンプ
+    private void HandleJump()
+    {
         // 接地猶予
-        coyoteTimeCounter = controller.isGrounded ? coyoteTime : coyoteTimeCounter - Time.deltaTime;
+        if (controller.isGrounded)
+            coyoteTimeCounter = coyoteTime;
+        else
+        {
+            coyoteTimeCounter -= Time.deltaTime;
+            coyoteTimeCounter = Mathf.Max(coyoteTimeCounter, 0f);
+        }
 
         // ジャンプバッファ
         if (jumpBufferCounter > 0 && coyoteTimeCounter > 0)
@@ -96,28 +131,21 @@ public class PlayerController : MonoBehaviour
             verticalVelocity = jumpForce;
             jumpBufferCounter = 0;
             anim.SetTrigger("Jump");
+            state = PlayerState.Jumping;
         }
         else
         {
             jumpBufferCounter -= Time.deltaTime;
+            jumpBufferCounter = Mathf.Max(jumpBufferCounter, 0f);
         }
-
-        if (controller.isGrounded && verticalVelocity < 0) verticalVelocity = -2f;
-
-        verticalVelocity += gravity * Time.deltaTime;
-        move.y = verticalVelocity;
-
-        float speed = moveSpeed;
-        if (controls.Player.Sprint.IsPressed()) speed *= sprintMultiplier;
-
-        controller.Move(move * speed * Time.deltaTime);
-
-        // 状態設定
-        state = move.sqrMagnitude > 0.01f ? PlayerState.Walking : PlayerState.Idle;
     }
+    #endregion
 
+    #region 攻撃
     private void HandleAttackInput()
     {
+        if (state == PlayerState.Dodging) return;
+
         if (state != PlayerState.Attacking)
         {
             state = PlayerState.Attacking;
@@ -128,11 +156,10 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            comboInput = true; // 攻撃中の入力を記録
+            comboInput = true;
         }
     }
 
-    // アニメーションイベントから呼ぶ
     public void OnAttackEnd()
     {
         if (comboInput && comboStep < comboMax)
@@ -140,7 +167,7 @@ public class PlayerController : MonoBehaviour
             comboStep++;
             comboInput = false;
             anim.SetInteger("ComboStep", comboStep);
-            anim.SetTrigger("Attack"); // 次のコンボ攻撃
+            anim.SetTrigger("Attack");
         }
         else
         {
@@ -148,17 +175,58 @@ public class PlayerController : MonoBehaviour
             state = PlayerState.Idle;
         }
     }
+    #endregion
+
+    #region 回避
+    private void HandleDodgeInput()
+    {
+        if (state == PlayerState.Attacking || isDodging) return;
+
+        state = PlayerState.Dodging;
+        isDodging = true;
+        dodgeTimer = dodgeDuration;
+
+        Vector3 dir = cameraTransform.forward * moveInput.y + cameraTransform.right * moveInput.x;
+        dir.y = 0;
+        dodgeDirection = dir.sqrMagnitude > 0.01f ? dir.normalized : playerTransform.forward;
+
+        anim.SetTrigger("Dodge");
+    }
+
+    private void HandleDodge()
+    {
+        if (!isDodging) return;
+
+        controller.Move(dodgeDirection * dodgeSpeed * Time.deltaTime);
+        dodgeTimer -= Time.deltaTime;
+
+        if (dodgeTimer <= 0f)
+        {
+            isDodging = false;
+            state = PlayerState.Idle;
+        }
+    }
+    #endregion
+
+    #region 重力
+    private void HandleGravity()
+    {
+        if (controller.isGrounded && verticalVelocity < 0) verticalVelocity = -2f;
+        verticalVelocity += gravity * Time.deltaTime;
+        controller.Move(Vector3.up * verticalVelocity * Time.deltaTime);
+    }
+    #endregion
 
     private void UpdateAnimator()
     {
         Vector3 delta = playerTransform.position - previousPosition;
         delta.y = 0;
-        float speed = (state == PlayerState.Attacking) ? 0f : delta.magnitude / Time.deltaTime;
-
+        float speed = delta.magnitude / Time.deltaTime;
         anim.SetFloat("Speed", speed);
         anim.SetInteger("ComboStep", comboStep);
-
         previousPosition = playerTransform.position;
     }
 }
+
+
 
