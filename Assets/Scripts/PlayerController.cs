@@ -4,15 +4,8 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    public enum PlayerState
-    {
-        Idle,
-        Walking,
-        Running,
-        Jumping,
-        Attacking
-    }
-    public PlayerState state;
+    public enum PlayerState { Idle, Walking, Running, Jumping, Attacking }
+    public PlayerState state = PlayerState.Idle;
 
     [Header("移動設定")]
     public float moveSpeed = 5f;
@@ -29,20 +22,20 @@ public class PlayerController : MonoBehaviour
 
     private CharacterController controller;
     private Vector2 moveInput;
-    public Animator anim;
     public Transform playerTransform;
     public Transform cameraTransform;
+    public Animator anim;
 
     private float verticalVelocity;
     private Vector3 previousPosition;
 
-    // PlayerControls を追加
+    // Input System
     private PlayerControls controls;
 
-    //コンボ攻撃用の変数
+    // コンボ攻撃用
     private int comboStep = 0;
-    private float comboTimer = 0f;
-    private float comboMaxDelay = 1f; // コンボの最大遅延時間
+    private int comboMax = 3;
+    private bool comboInput = false;
 
     private void Awake()
     {
@@ -51,12 +44,18 @@ public class PlayerController : MonoBehaviour
 
         controls = new PlayerControls();
 
-        // 入力イベント登録
-        controls.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();// 移動入力取得
-        controls.Player.Move.canceled += ctx => moveInput = Vector2.zero;// 移動入力リセット
-        controls.Player.Jump.performed += ctx => jumpBufferCounter = jumpBufferTime;// ジャンプバッファ設定
-        controls.Player.Sprint.performed += ctx => { }; // SprintはIsPressedで取得
-        controls.Player.Attack.started += ctx => HandleAttackInput();// 攻撃入力処理
+        // 移動入力
+        controls.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
+        controls.Player.Move.canceled += ctx => moveInput = Vector2.zero;
+
+        // ジャンプ入力
+        controls.Player.Jump.performed += ctx => jumpBufferCounter = jumpBufferTime;
+
+        // 攻撃入力
+        controls.Player.Attack.started += ctx => HandleAttackInput();
+
+        // スプリントはIsPressedで取得
+        controls.Player.Sprint.performed += ctx => { };
     }
 
     private void OnEnable() => controls.Player.Enable();
@@ -66,32 +65,26 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        HandlecomboTimer();
         Move();
         UpdateAnimator();
-        Debug.Log("Is Grounded: " + controller.isGrounded);
     }
 
     private void Move()
     {
-        if (state == PlayerState.Attacking)
-        {
-            // 攻撃中は移動しない
-            return;
-        }
+        if (state == PlayerState.Attacking) return; // 攻撃中は移動不可
         if (cameraTransform == null) return;
-        // カメラの向きに基づく移動方向計算
+
         Vector3 forward = cameraTransform.forward;
         Vector3 right = cameraTransform.right;
-        forward.y = 0; right.y = 0;
+        forward.y = right.y = 0;
         forward.Normalize(); right.Normalize();
 
-        Vector3 move = forward * moveInput.y + right * moveInput.x;// 移動方向計算
+        Vector3 move = forward * moveInput.y + right * moveInput.x;
 
         if (move.sqrMagnitude > 0.01f)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(move.normalized);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            Quaternion targetRot = Quaternion.LookRotation(move.normalized);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
         }
 
         // 接地猶予
@@ -100,24 +93,27 @@ public class PlayerController : MonoBehaviour
         // ジャンプバッファ
         if (jumpBufferCounter > 0 && coyoteTimeCounter > 0)
         {
-            anim.SetTrigger("Jump");
             verticalVelocity = jumpForce;
             jumpBufferCounter = 0;
+            anim.SetTrigger("Jump");
         }
         else
+        {
             jumpBufferCounter -= Time.deltaTime;
+        }
 
-        if (controller.isGrounded && verticalVelocity < 0)
-            verticalVelocity = -2f;
+        if (controller.isGrounded && verticalVelocity < 0) verticalVelocity = -2f;
 
         verticalVelocity += gravity * Time.deltaTime;
         move.y = verticalVelocity;
 
-        // ダッシュ処理
         float speed = moveSpeed;
         if (controls.Player.Sprint.IsPressed()) speed *= sprintMultiplier;
 
         controller.Move(move * speed * Time.deltaTime);
+
+        // 状態設定
+        state = move.sqrMagnitude > 0.01f ? PlayerState.Walking : PlayerState.Idle;
     }
 
     private void HandleAttackInput()
@@ -125,38 +121,44 @@ public class PlayerController : MonoBehaviour
         if (state != PlayerState.Attacking)
         {
             state = PlayerState.Attacking;
-            comboStep++;
-            comboTimer = comboMaxDelay; // コンボタイマーリセット
+            comboStep = 1;
+            comboInput = false;
             anim.SetInteger("ComboStep", comboStep);
             anim.SetTrigger("Attack");
         }
-        else if (state == PlayerState.Attacking && comboTimer > 0f)
+        else
         {
-            // コンボ攻撃の入力受付
-            comboStep++;
-            comboTimer = comboMaxDelay; // コンボタイマーリセット
+            comboInput = true; // 攻撃中の入力を記録
         }
     }
-    private void HandlecomboTimer()
-    {
-        if (comboTimer > 0f) comboTimer -= Time.deltaTime;
-        else comboStep = 0; // タイムアウトでコンボリセット
-    }
 
-    private void OnAttackEnd()
+    // アニメーションイベントから呼ぶ
+    public void OnAttackEnd()
     {
-        state = PlayerState.Idle;
+        if (comboInput && comboStep < comboMax)
+        {
+            comboStep++;
+            comboInput = false;
+            anim.SetInteger("ComboStep", comboStep);
+            anim.SetTrigger("Attack"); // 次のコンボ攻撃
+        }
+        else
+        {
+            comboStep = 0;
+            state = PlayerState.Idle;
+        }
     }
 
     private void UpdateAnimator()
     {
-
         Vector3 delta = playerTransform.position - previousPosition;
         delta.y = 0;
-        float speed = delta.magnitude / Time.deltaTime;
+        float speed = (state == PlayerState.Attacking) ? 0f : delta.magnitude / Time.deltaTime;
 
         anim.SetFloat("Speed", speed);
-        anim.SetFloat("ComboStep", comboStep);
+        anim.SetInteger("ComboStep", comboStep);
+
         previousPosition = playerTransform.position;
     }
 }
+
