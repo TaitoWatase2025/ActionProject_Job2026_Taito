@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 previousPosition;
 
     // コンボ攻撃用
-    private int comboStep = 0;
+    public int comboStep = 0;
     private int comboMax = 3;
     private bool comboInput = false;
 
@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
         controls.Player.Sprint.performed += ctx => { };
     }
 
-    
+
     private void OnEnable() => controls.Player.Enable();
     private void OnDisable() => controls.Player.Disable();
 
@@ -150,31 +150,45 @@ public class PlayerController : MonoBehaviour
 
         if (state != PlayerState.Attacking)
         {
-            state = PlayerState.Attacking;
-            comboStep = 1;
-            comboInput = false;
-            anim.SetInteger("ComboStep", comboStep);
-            anim.SetTrigger("Attack");
+            if (comboInput && comboStep < comboMax)
+            {
+                comboInput = true;
+            }
         }
-        else
-        {
-            comboInput = true;
-        }
+
+        state = PlayerState.Attacking;
+        comboStep = 1;
+        comboInput = false;
+        anim.SetInteger("ComboStep", comboStep);
+        anim.SetTrigger("Attack");
+
+    }
+    public void Combowindowstart()
+    {
+        // コンボウィンドウ開始（アニメーションイベントから呼び出し）
+        comboInput = true;
+    }
+    public void Combowindowend()
+    {
+        // コンボウィンドウ終了（アニメーションイベントから呼び出し）
+        comboInput = false;
     }
 
     public void OnAttackEnd()
     {
+
         if (comboInput && comboStep < comboMax)
         {
             comboStep++;
-            comboInput = false;
             anim.SetInteger("ComboStep", comboStep);
             anim.SetTrigger("Attack");
+            comboInput = false;
         }
         else
         {
             comboStep = 0;
             state = PlayerState.Idle;
+            anim.SetInteger("ComboStep", comboStep);
         }
     }
     #endregion
