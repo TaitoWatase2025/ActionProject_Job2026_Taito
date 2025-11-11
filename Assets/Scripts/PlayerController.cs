@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
-        if (playerTransform == null) playerTransform = transform;
+        if (playerTransform == null) playerTransform = transform;// デフォルトで自分自身を設定
 
         controls = new PlayerControls();
 
@@ -70,6 +70,7 @@ public class PlayerController : MonoBehaviour
         controls.Player.Sprint.performed += ctx => { };
     }
 
+    
     private void OnEnable() => controls.Player.Enable();
     private void OnDisable() => controls.Player.Disable();
 
@@ -79,7 +80,7 @@ public class PlayerController : MonoBehaviour
         HandleGravity();
         HandleDodge();
         HandleMove();
-        anim.SetBool("IsGrounded", controller.isGrounded);
+        anim.SetBool("IsGrounded", controller.isGrounded);// 接地情報をアニメーターに渡す
         UpdateAnimator();
     }
 
@@ -89,19 +90,19 @@ public class PlayerController : MonoBehaviour
         if (state == PlayerState.Attacking || isDodging || state == PlayerState.Dodging) return;
         if (cameraTransform == null) return;
 
-        Vector3 forward = cameraTransform.forward;
-        Vector3 right = cameraTransform.right;
-        forward.y = right.y = 0;
-        forward.Normalize(); right.Normalize();
-
+        Vector3 forward = cameraTransform.forward;// カメラの向きから前方向を取得
+        Vector3 right = cameraTransform.right;// カメラの向きから右方向を取得
+        forward.y = right.y = 0;// 水平方向のみに制限
+        forward.Normalize(); right.Normalize();// 正規化
+        // 移動方向の計算
         Vector3 move = forward * moveInput.y + right * moveInput.x;
 
-        if (move.sqrMagnitude > 0.01f)
+        if (move.sqrMagnitude > 0.01f)// 回転処理
         {
             Quaternion targetRot = Quaternion.LookRotation(move.normalized);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
         }
-
+        // 移動処理
         float speed = moveSpeed;
         if (controls.Player.Sprint.IsPressed()) speed *= sprintMultiplier;
 
