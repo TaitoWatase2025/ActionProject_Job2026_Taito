@@ -81,6 +81,7 @@ public class PlayerController : MonoBehaviour
         HandleDodge();
         HandleMove();
         anim.SetBool("IsGrounded", controller.isGrounded);// 接地情報をアニメーターに渡す
+        anim.SetFloat("Speed", controller.velocity.magnitude);// 速度情報をアニメーターに渡す
         UpdateAnimator();
     }
 
