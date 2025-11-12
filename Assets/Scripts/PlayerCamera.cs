@@ -24,7 +24,8 @@ public class PlayerCamera : MonoBehaviour
         // 初期カメラ位置を背後に設定
         yaw = 180f;          // Player の背後
         pitch = 10f;         // 少し見下ろす角度
-        zoom = -offset.z;    // offset.z に合わせてズーム初期化
+
+        zoom = Mathf.Abs(offset.z); // 初期ズーム距離を設定
     }
 
     private void LateUpdate()

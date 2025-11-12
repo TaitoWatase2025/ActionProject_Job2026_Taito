@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 previousPosition;
 
     // ƒRƒ“ƒ{UŒ‚—p
-    public int comboStep = 0;
+    private int comboStep = 0;
     private int comboMax = 3;
     private bool comboInput = false;
 

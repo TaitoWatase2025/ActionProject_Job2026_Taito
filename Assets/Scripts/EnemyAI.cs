@@ -1,93 +1,121 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyAI : MonoBehaviour
-{
-    [Header("視界設定")]
-    public float viewDistance = 20f;   // プレイヤーを認識する距離
-    public float viewAngle = 120f;     // 視界の角度
-    public Transform player;           // プレイヤーのTransform
+public enum EnemyState { Idle, Patrol, Chase, Attack, Dodge, Stagger }
 
-    [Header("移動速度設定")]
-    public float walkSpeed = 3f;       // 近距離で歩く速度
-    public float runSpeed = 6f;        // 中距離で走る速度
-    public float sprintSpeed = 10f;    // 遠距離でスプリント
+[RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(Animator))]
+public class DarkSoulsEnemyAI : MonoBehaviour
+{
+    [Header("視界")]
+    public float viewDistance = 20f;
+    public float viewAngle = 120f;
+
+    [Header("攻撃距離")]
+    public float attackRange = 2f;
+
+    [Header("移動速度")]
+    public float walkSpeed = 2f;
+    public float runSpeed = 5f;
+
+    [Header("参照")]
+    public Transform player;
 
     private NavMeshAgent agent;
     private Animator anim;
+    private EnemyState state = EnemyState.Idle;
 
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        agent.updateRotation = false;
         anim = GetComponent<Animator>();
+        agent.updateRotation = false; // 手動で回転
         if (player == null)
             player = GameObject.FindGameObjectWithTag("Player").transform;
-
-        // NavMeshAgentの基本設定
-        agent.acceleration = 8f;
-        agent.angularSpeed = 120f;
     }
 
     private void Update()
     {
-        if (PlayerInSight())
+        switch (state)
         {
-            float distance = Vector3.Distance(transform.position, player.position);
-
-            // 距離に応じて速度を変更
-            if (distance > 15f)
-            {
-                // 遠距離ではスプリントアニメーションを再生
-                if (anim != null)
-                    anim.SetFloat("Speed", 1.5f); // スプリント速度に応じたアニメーション速度
-                agent.speed = sprintSpeed;
-            }
-                
-            else if (distance > 5f)
-            {
-                // 中距離では走るアニメーションを再生
-                if (anim != null)
-                    anim.SetFloat("Speed", 1.0f); // 走る速度に応じたアニメーション速度
-                agent.speed = runSpeed;
-            }
-                
-            else
-            {
-                // 近距離では歩くアニメーションを再生
-                if (anim != null)
-                    anim.SetFloat("Speed", 0.5f); // 歩く速度に応じたアニメーション速度
-                agent.speed = walkSpeed;
-            }
-                
-
-            agent.SetDestination(player.position);// プレイヤーに向かって移動
+            case EnemyState.Idle:
+            case EnemyState.Patrol:
+                LookForPlayer();
+                break;
+            case EnemyState.Chase:
+                ChasePlayer();
+                break;
+            case EnemyState.Attack:
+                AttackPlayer();
+                break;
+            case EnemyState.Dodge:
+                // 後で追加
+                break;
+            case EnemyState.Stagger:
+                // 後で追加
+                break;
         }
-        else
+
+        RotateTowardsPlayer();
+    }
+
+    private void LookForPlayer()
+    {
+        if (CanSeePlayer())
         {
-            // プレイヤーを見失った場合は止まる
-            agent.SetDestination(transform.position);
+            state = EnemyState.Chase;
         }
     }
 
-    private bool PlayerInSight()
+    private void ChasePlayer()
+    {
+        float distance = Vector3.Distance(transform.position, player.position);
+        if (distance > attackRange)
+        {
+            agent.isStopped = false;
+            agent.speed = distance > 5f ? runSpeed : walkSpeed;
+            agent.SetDestination(player.position);
+            anim.SetFloat("Speed", agent.speed / runSpeed); // 0~1でAnimatorに送る
+        }
+        else
+        {
+            agent.isStopped = true;
+            anim.SetFloat("Speed", 0f);
+            state = EnemyState.Attack;
+        }
+    }
+
+    private void AttackPlayer()
+    {
+        // 攻撃アニメーション再生
+        anim.SetTrigger("Attack");
+        state = EnemyState.Chase; // 攻撃後に再び追跡
+    }
+
+    private void RotateTowardsPlayer()
+    {
+        if (player == null) return;
+        Vector3 direction = (player.position - transform.position).normalized;
+        direction.y = 0;
+        if (direction.magnitude > 0)
+        {
+            Quaternion lookRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 5f * Time.deltaTime);
+        }
+    }
+
+    private bool CanSeePlayer()
     {
         if (player == null) return false;
-
-        Vector3 direction = player.position - transform.position;
-        float distance = direction.magnitude;
-
-        if (distance > viewDistance) return false;
-
-        float angle = Vector3.Angle(transform.forward, direction);
+        Vector3 dir = player.position - transform.position;
+        if (dir.magnitude > viewDistance) return false;
+        float angle = Vector3.Angle(transform.forward, dir);
         if (angle > viewAngle / 2f) return false;
 
-        // 障害物の判定（壁などを考慮）
-        Ray ray = new Ray(transform.position + Vector3.up * 1.5f, direction.normalized);
-        if (Physics.Raycast(ray, out RaycastHit hit, viewDistance))
+        // 障害物チェック
+        if (Physics.Raycast(transform.position + Vector3.up * 1.5f, dir.normalized, out RaycastHit hit, viewDistance))
         {
-            if (hit.transform == player)
-                return true; // プレイヤーを発見
+            if (hit.transform == player) return true;
         }
 
         return false;
