@@ -16,8 +16,9 @@ public class EnemyAI : MonoBehaviour
     public LayerMask obstacleLayer;
 
     [Header("UŒ‚")]
-    public float attackRange = 4f;       // UŒ‚‹——£
-    public float minAttackRange = 3f;    // ‹ß‚·‚¬‚½Û
+    public float attackRange = 5f;       // UŒ‚‹——£
+    public float minAttackRange = 2f;    // ‹ß‚·‚¬‚½Û
+    public float shortAttackRange = 3f; // ’Z‹——£UŒ‚‹——£
     public float attackAngle = 60f;      // ³–ÊUŒ‚”ÍˆÍi“xj
     public float attackCooldown = 1.5f;
     private float lastAttackTime = 0f;
@@ -127,6 +128,11 @@ public class EnemyAI : MonoBehaviour
         if(distance< minAttackRange)//‹ß‚·‚¬‚½‚çŒã‘Ş
         {
             anim.SetTrigger("BackJump");
+            return;
+        }
+        if(distance<shortAttackRange)//’Z‹——£UŒ‚
+        {
+            anim.SetTrigger("ShortAttack");
             return;
         }
 
