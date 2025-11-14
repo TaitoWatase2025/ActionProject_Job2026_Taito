@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum EnemyState { Idle, Patrol, Chase, Attack, Dodge, Stagger }
+public enum EnemyState { Idle, Patrol, Chase, Attack }
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
@@ -48,12 +48,6 @@ public class DarkSoulsEnemyAI : MonoBehaviour
             case EnemyState.Attack:
                 AttackPlayer();
                 break;
-            case EnemyState.Dodge:
-                // 後で追加
-                break;
-            case EnemyState.Stagger:
-                // 後で追加
-                break;
         }
 
         RotateTowardsPlayer();
@@ -62,9 +56,7 @@ public class DarkSoulsEnemyAI : MonoBehaviour
     private void LookForPlayer()
     {
         if (CanSeePlayer())
-        {
             state = EnemyState.Chase;
-        }
     }
 
     private void ChasePlayer()
@@ -75,21 +67,30 @@ public class DarkSoulsEnemyAI : MonoBehaviour
             agent.isStopped = false;
             agent.speed = distance > 5f ? runSpeed : walkSpeed;
             agent.SetDestination(player.position);
-            anim.SetFloat("Speed", agent.speed / runSpeed); // 0~1でAnimatorに送る
+
+            // 移動アニメーション
+            anim.SetFloat("Speed", agent.speed / runSpeed);
         }
         else
         {
             agent.isStopped = true;
-            anim.SetFloat("Speed", 0f);
             state = EnemyState.Attack;
         }
     }
 
     private void AttackPlayer()
     {
-        // 攻撃アニメーション再生
+        // 攻撃アニメーション
         anim.SetTrigger("Attack");
-        state = EnemyState.Chase; // 攻撃後に再び追跡
+
+        // 攻撃後はIdleに戻る
+        state = EnemyState.Idle;
+    }
+
+    // 攻撃終了時にAnimation Eventで呼ぶ（必要に応じて）
+    public void OnAttackEnd()
+    {
+        anim.SetTrigger("Idle");
     }
 
     private void RotateTowardsPlayer()
@@ -112,7 +113,6 @@ public class DarkSoulsEnemyAI : MonoBehaviour
         float angle = Vector3.Angle(transform.forward, dir);
         if (angle > viewAngle / 2f) return false;
 
-        // 障害物チェック
         if (Physics.Raycast(transform.position + Vector3.up * 1.5f, dir.normalized, out RaycastHit hit, viewDistance))
         {
             if (hit.transform == player) return true;
@@ -121,4 +121,3 @@ public class DarkSoulsEnemyAI : MonoBehaviour
         return false;
     }
 }
-
