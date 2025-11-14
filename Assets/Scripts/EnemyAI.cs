@@ -1,45 +1,54 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum EnemyState { Idle, Patrol, Chase, Attack }
+public enum EnemyState { Patrol, Chase, Attack }
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
-public class DarkSoulsEnemyAI : MonoBehaviour
+public class EnemyAI : MonoBehaviour
 {
-    [Header("視界")]
-    public float viewDistance = 20f;
+    [Header("ステート設定")]
+    public EnemyState state = EnemyState.Patrol;
+
+    [Header("プレイヤー検知")]
+    public float viewRadius = 10f;
     public float viewAngle = 120f;
+    public LayerMask obstacleLayer;
 
-    [Header("攻撃距離")]
-    public float attackRange = 2f;
+    [Header("攻撃")]
+    public float attackRange = 4f;       // 攻撃距離
+    public float minAttackRange = 3f;    // 近すぎた際
+    public float attackAngle = 60f;      // 正面攻撃範囲（度）
+    public float attackCooldown = 1.5f;
+    private float lastAttackTime = 0f;
 
-    [Header("移動速度")]
-    public float walkSpeed = 2f;
-    public float runSpeed = 5f;
-
-    [Header("参照")]
-    public Transform player;
+    [Header("パトロール")]
+    public float patrolRadius = 5f;
+    public float patrolWaitTime = 2f;
 
     private NavMeshAgent agent;
     private Animator anim;
-    private EnemyState state = EnemyState.Idle;
+    private Transform player;
+    private Vector3 patrolTarget;
+    private float waitTimer = 0f;
 
-    private void Awake()
+    void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
-        agent.updateRotation = false; // 手動で回転
-        if (player == null)
-            player = GameObject.FindGameObjectWithTag("Player").transform;
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+
+        SetRandomPatrolTarget();
     }
 
-    private void Update()
+    void Update()
     {
+        anim.SetFloat("Speed", agent.velocity.magnitude);
+
         switch (state)
         {
-            case EnemyState.Idle:
             case EnemyState.Patrol:
+                Patrol();
                 LookForPlayer();
                 break;
             case EnemyState.Chase:
@@ -49,75 +58,109 @@ public class DarkSoulsEnemyAI : MonoBehaviour
                 AttackPlayer();
                 break;
         }
-
-        RotateTowardsPlayer();
     }
 
-    private void LookForPlayer()
+    #region パトロール
+    void Patrol()
     {
-        if (CanSeePlayer())
-            state = EnemyState.Chase;
-    }
-
-    private void ChasePlayer()
-    {
-        float distance = Vector3.Distance(transform.position, player.position);
-        if (distance > attackRange)
+        if (!agent.pathPending && agent.remainingDistance < 0.5f)
         {
-            agent.isStopped = false;
-            agent.speed = distance > 5f ? runSpeed : walkSpeed;
-            agent.SetDestination(player.position);
-
-            // 移動アニメーション
-            anim.SetFloat("Speed", agent.speed / runSpeed);
+            waitTimer += Time.deltaTime;
+            if (waitTimer >= patrolWaitTime)
+            {
+                SetRandomPatrolTarget();
+                waitTimer = 0f;
+            }
         }
-        else
+    }
+
+    void SetRandomPatrolTarget()
+    {
+        Vector3 randomDirection = Random.insideUnitSphere * patrolRadius + transform.position;
+        if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, patrolRadius, NavMesh.AllAreas))
         {
-            agent.isStopped = true;
+            patrolTarget = hit.position;
+            agent.destination = patrolTarget;
+        }
+    }
+    #endregion
+
+    #region プレイヤー検知
+    void LookForPlayer()
+    {
+        Vector3 dirToPlayer = (player.position - transform.position).normalized;
+        float distance = Vector3.Distance(transform.position, player.position);
+
+        if (distance <= viewRadius &&
+            Vector3.Angle(transform.forward, dirToPlayer) <= viewAngle / 2 &&
+            !Physics.Raycast(transform.position, dirToPlayer, distance, obstacleLayer))
+        {
+            state = EnemyState.Chase;
+        }
+    }
+    #endregion
+
+    #region 追跡
+    void ChasePlayer()
+    {
+        agent.destination = player.position;
+
+        if (IsPlayerInAttackRange())
+        {
             state = EnemyState.Attack;
         }
-    }
-
-    private void AttackPlayer()
-    {
-        // 攻撃アニメーション
-        anim.SetTrigger("Attack");
-
-        // 攻撃後はIdleに戻る
-        state = EnemyState.Idle;
-    }
-
-    // 攻撃終了時にAnimation Eventで呼ぶ（必要に応じて）
-    public void OnAttackEnd()
-    {
-        anim.SetTrigger("Idle");
-    }
-
-    private void RotateTowardsPlayer()
-    {
-        if (player == null) return;
-        Vector3 direction = (player.position - transform.position).normalized;
-        direction.y = 0;
-        if (direction.magnitude > 0)
+        else if (Vector3.Distance(transform.position, player.position) > viewRadius)
         {
-            Quaternion lookRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, 5f * Time.deltaTime);
+            state = EnemyState.Patrol;
+            SetRandomPatrolTarget();
+        }
+    }
+    #endregion
+
+    #region 攻撃
+    void AttackPlayer()
+    {
+        agent.destination = transform.position; // 攻撃中は停止
+
+        //近い場合は後退
+        float distance = Vector3.Distance(transform.position, player.position);
+        if(distance< minAttackRange)//近すぎたら後退
+        {
+            anim.SetTrigger("BackJump");
+            return;
+        }
+
+        agent.destination=transform.position;//停止
+
+        if (IsPlayerInAttackRange() && Time.time - lastAttackTime >= attackCooldown)
+        {
+            anim.SetTrigger("Attack");
+            lastAttackTime = Time.time;
+        }
+
+        if (!IsPlayerInAttackRange())
+        {
+            state = EnemyState.Chase;
         }
     }
 
-    private bool CanSeePlayer()
+    bool IsPlayerInAttackRange()
     {
-        if (player == null) return false;
-        Vector3 dir = player.position - transform.position;
-        if (dir.magnitude > viewDistance) return false;
-        float angle = Vector3.Angle(transform.forward, dir);
-        if (angle > viewAngle / 2f) return false;
+        // 距離判定
+        float distance = Vector3.Distance(transform.position, player.position);
+        if (distance > attackRange) return false;
 
-        if (Physics.Raycast(transform.position + Vector3.up * 1.5f, dir.normalized, out RaycastHit hit, viewDistance))
-        {
-            if (hit.transform == player) return true;
-        }
+        // 正面判定
+        Vector3 dirToPlayer = (player.position - transform.position).normalized;
+        float angle = Vector3.Angle(transform.forward, dirToPlayer);
+
+        if (angle <= attackAngle / 2f)
+            return true;
 
         return false;
     }
+    #endregion
 }
+
+
+
