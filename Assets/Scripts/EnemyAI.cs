@@ -18,7 +18,7 @@ public class EnemyAI : MonoBehaviour
     [Header("UŒ‚")]
     public float attackRange = 5f;       // UŒ‚‹——£
     public float minAttackRange = 2f;    // ‹ß‚·‚¬‚½Û
-    public float shortAttackRange = 3f; // ’Z‹——£UŒ‚‹——£
+    public float shortAttackRange = 4f; // ‹ß‹——£UŒ‚‹——£
     public float attackAngle = 60f;      // ³–ÊUŒ‚”ÍˆÍi“xj
     public float attackCooldown = 1.5f;
     private float lastAttackTime = 0f;
@@ -93,7 +93,6 @@ public class EnemyAI : MonoBehaviour
         float distance = Vector3.Distance(transform.position, player.position);
 
         if (distance <= viewRadius &&
-            Vector3.Angle(transform.forward, dirToPlayer) <= viewAngle / 2 &&
             !Physics.Raycast(transform.position, dirToPlayer, distance, obstacleLayer))
         {
             state = EnemyState.Chase;
@@ -123,20 +122,25 @@ public class EnemyAI : MonoBehaviour
     {
         agent.destination = transform.position; // UŒ‚’†‚Í’â~
 
+        //HP‚ª10“Œ¸‚é‚Æ”­“®
+
         //‹ß‚¢ê‡‚ÍŒã‘Ş
         float distance = Vector3.Distance(transform.position, player.position);
-        if(distance< minAttackRange)//‹ß‚·‚¬‚½‚çŒã‘Ş
+        Vector3 dirToPlayer = (player.position - transform.position).normalized;
+        float angle = Vector3.Angle(transform.forward, dirToPlayer);
+        if (distance < minAttackRange)//‹ß‚·‚¬‚½‚çŒã‘Ş
         {
             anim.SetTrigger("BackJump");
             return;
         }
-        if(distance<shortAttackRange)//’Z‹——£UŒ‚
+        if (distance < shortAttackRange && angle <= attackAngle / 1.5f)//‹ß‹——£UŒ‚
         {
             anim.SetTrigger("ShortAttack");
             return;
         }
 
-        agent.destination=transform.position;//’â~
+
+        agent.destination = transform.position;//’â~
 
         if (IsPlayerInAttackRange() && Time.time - lastAttackTime >= attackCooldown)
         {
@@ -154,13 +158,14 @@ public class EnemyAI : MonoBehaviour
     {
         // ‹——£”»’è
         float distance = Vector3.Distance(transform.position, player.position);
+
         if (distance > attackRange) return false;
 
         // ³–Ê”»’è
         Vector3 dirToPlayer = (player.position - transform.position).normalized;
         float angle = Vector3.Angle(transform.forward, dirToPlayer);
 
-        if (angle <= attackAngle / 2f)
+        if (angle <= attackAngle / 1.5f)
             return true;
 
         return false;

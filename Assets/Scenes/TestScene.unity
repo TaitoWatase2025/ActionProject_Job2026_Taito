@@ -1733,7 +1733,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4531750643963541716, guid: 459f79a004eb51144840e79b6950c697, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 654443430}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6393974813386716368, guid: 459f79a004eb51144840e79b6950c697, type: 3}
       insertIndex: -1
@@ -1744,7 +1747,80 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6393974813386716368, guid: 459f79a004eb51144840e79b6950c697, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1693098025}
+    - targetCorrespondingSourceObject: {fileID: 6393974813386716368, guid: 459f79a004eb51144840e79b6950c697, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1693098028}
+    - targetCorrespondingSourceObject: {fileID: 6393974813386716368, guid: 459f79a004eb51144840e79b6950c697, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1693098029}
   m_SourcePrefab: {fileID: 100100000, guid: 459f79a004eb51144840e79b6950c697, type: 3}
+--- !u!1 &654443427
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 654443430}
+  - component: {fileID: 654443429}
+  - component: {fileID: 654443428}
+  m_Layer: 0
+  m_Name: AttackHit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &654443428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 654443427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc14d0b4e297b374cbb9364bd78751cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SwordAttack
+  attackCollider: {fileID: 654443429}
+--- !u!65 &654443429
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 654443427}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.09, y: 1.2, z: 0.13}
+  m_Center: {x: 0, y: 0.75, z: 0}
+--- !u!4 &654443430
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 654443427}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1216544464}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &961739749
 GameObject:
   m_ObjectHideFlags: 0
@@ -1936,6 +2012,16 @@ MonoBehaviour:
   zoomSpeed: 25
   minZoom: 3
   maxZoom: 8
+--- !u!4 &1142596741 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 804298944034154118, guid: aed627340042be74486b2681768c9802, type: 3}
+  m_PrefabInstance: {fileID: 3770188634219173752}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1216544464 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4531750643963541716, guid: 459f79a004eb51144840e79b6950c697, type: 3}
+  m_PrefabInstance: {fileID: 342647897}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1382027983
 GameObject:
   m_ObjectHideFlags: 0
@@ -2106,6 +2192,7 @@ MonoBehaviour:
     m_Bits: 0
   attackRange: 4
   minAttackRange: 1
+  shortAttackRange: 3
   attackAngle: 60
   attackCooldown: 2
   patrolRadius: 5
@@ -2155,6 +2242,101 @@ CapsuleCollider:
   m_Height: 1.8
   m_Direction: 1
   m_Center: {x: 0, y: 0.9, z: 0}
+--- !u!114 &1693098028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1693098020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0f077565d558a742856ad7547a813b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyStetus
+  maxHealth: 100
+  AttackPower: 10
+  health: 0
+--- !u!114 &1693098029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1693098020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 780a6fd7f19b3294eacc7ce0d2f8b0a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitboxController
+  swordAttack: {fileID: 654443428}
+--- !u!1 &1780743365
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1780743366}
+  - component: {fileID: 1780743368}
+  - component: {fileID: 1780743369}
+  m_Layer: 6
+  m_Name: AttackHit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1780743366
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1780743365}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.020346826, y: 0.71173966, z: -0.70195794, w: -0.016362676}
+  m_LocalPosition: {x: 0.006000191, y: 0.74100053, z: 0.008999288}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1142596741}
+  m_LocalEulerAnglesHint: {x: 89.144, y: 159.326, z: -23.649}
+--- !u!65 &1780743368
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1780743365}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.07, y: 0.14, z: 1.2}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1780743369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1780743365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc14d0b4e297b374cbb9364bd78751cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SwordAttack
+  attackCollider: {fileID: 0}
 --- !u!1001 &3770188634219173752
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2257,11 +2439,20 @@ PrefabInstance:
       objectReference: {fileID: 961739753}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 804298944034154118, guid: aed627340042be74486b2681768c9802, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1780743366}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 3319250103939534823, guid: aed627340042be74486b2681768c9802, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6048376750407757828}
+    - targetCorrespondingSourceObject: {fileID: 3319250103939534823, guid: aed627340042be74486b2681768c9802, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6048376750407757834}
+    - targetCorrespondingSourceObject: {fileID: 3319250103939534823, guid: aed627340042be74486b2681768c9802, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6048376750407757835}
   m_SourcePrefab: {fileID: 100100000, guid: aed627340042be74486b2681768c9802, type: 3}
 --- !u!4 &6048376750407757822 stripped
 Transform:
@@ -2291,6 +2482,35 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &6048376750407757834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 272775434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c29400be72d57fe42a99272639b1b806, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerStatus
+  maxHealth: 100
+  attackPower: 1
+  health: 0
+  StunTime: 0
+--- !u!114 &6048376750407757835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 272775434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 780a6fd7f19b3294eacc7ce0d2f8b0a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
+  swordAttack: {fileID: 1780743369}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

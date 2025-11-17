@@ -76,6 +76,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (GetComponent<PlayerStatus>().IsStunned()) return; // スタン中は操作不可
         HandleJump();      // 先にジャンプ判定
         HandleGravity();
         HandleDodge();
@@ -196,7 +197,7 @@ public class PlayerController : MonoBehaviour
     #region 回避
     private void HandleDodgeInput()
     {
-        if (state == PlayerState.Attacking || isDodging) return;
+        if (state == PlayerState.Attacking || isDodging||GetComponent<PlayerStatus>().IsStunned()) return;
 
         state = PlayerState.Dodging;
         isDodging = true;
@@ -233,6 +234,20 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
+    #region 被弾時
+    public void OnHit()
+    {
+        // 被弾時の処理（アニメーションイベントから呼び出し）
+        // アニメーション時間操作できない
+
+        state = PlayerState.Idle;
+        comboStep = 0;
+        anim.SetInteger("ComboStep", comboStep);
+        anim.SetTrigger("AttackHit");
+        GetComponent<PlayerStatus>().StunTime = 1.5f; // スタン時間を設定
+    }
+    #endregion
+
     private void UpdateAnimator()
     {
         Vector3 delta = playerTransform.position - previousPosition;
@@ -243,6 +258,3 @@ public class PlayerController : MonoBehaviour
         previousPosition = playerTransform.position;
     }
 }
-
-
-
