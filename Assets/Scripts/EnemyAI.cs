@@ -124,6 +124,7 @@ public class EnemyAI : MonoBehaviour
 
         //HP‚ª10“Œ¸‚é‚Æ”­“®
 
+
         //‹ß‚¢ê‡‚ÍŒã‘Ş
         float distance = Vector3.Distance(transform.position, player.position);
         Vector3 dirToPlayer = (player.position - transform.position).normalized;

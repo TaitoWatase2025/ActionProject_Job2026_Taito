@@ -20,7 +20,7 @@ public class PlayerStatus : MonoBehaviour
     }
     void Update()
     {
-        if(StunTime > 0)
+        if (StunTime > 0)
         {
             StunTime -= Time.deltaTime;
         }
@@ -34,17 +34,16 @@ public class PlayerStatus : MonoBehaviour
         if (health <= 0) return;
         health -= amount;
         health = Mathf.Max(health, 0);
-        OnHealthChanged?.Invoke(health/maxHealth);
+        OnHealthChanged?.Invoke(health / maxHealth);
         if (health <= 0)
         {
             Die();
         }
     }
-    
+
     void Die()
     {
         Debug.Log("Player Died");
         Ondeath?.Invoke();
     }
-
 }

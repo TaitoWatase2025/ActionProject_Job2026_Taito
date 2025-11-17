@@ -14,9 +14,13 @@ public class EnemyStatus : MonoBehaviour
     public event Action<float> OnHealthChanged;
     public event Action OnDeath;
 
+    private HitStop hitstop;
+    public float hitStopDuration = 0.1f;
+
     void Start()
     {
         health = maxHealth;
+        hitstop = GetComponent<HitStop>();
     }
     public void TakeDamage(float amount)
     {
@@ -28,6 +32,10 @@ public class EnemyStatus : MonoBehaviour
         if (health <= maxHealth * 0.1f)
         {
             On10PercentHealthDown?.Invoke();
+        }
+        if (hitstop != null)
+        {
+            StartCoroutine(hitstop.DoHitStop(hitStopDuration));
         }
         if (health <= 0)
         {

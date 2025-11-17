@@ -45,7 +45,6 @@ public class PlayerController : MonoBehaviour
     private float jumpBufferTime = 0.1f;
     private float coyoteTimeCounter;
     private float jumpBufferCounter;
-
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
