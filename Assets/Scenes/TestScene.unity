@@ -1753,6 +1753,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6393974813386716368, guid: 459f79a004eb51144840e79b6950c697, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1693098029}
+    - targetCorrespondingSourceObject: {fileID: 6393974813386716368, guid: 459f79a004eb51144840e79b6950c697, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1693098030}
   m_SourcePrefab: {fileID: 100100000, guid: 459f79a004eb51144840e79b6950c697, type: 3}
 --- !u!1 &654443427
 GameObject:
@@ -2257,6 +2260,7 @@ MonoBehaviour:
   maxHealth: 100
   AttackPower: 10
   health: 0
+  hitStopDuration: 0.1
 --- !u!114 &1693098029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2270,6 +2274,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitboxController
   swordAttack: {fileID: 654443428}
+--- !u!114 &1693098030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1693098020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f96cd75d856fbac4783566edaa7cf78d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitStoppen
 --- !u!1 &1780743365
 GameObject:
   m_ObjectHideFlags: 0
@@ -2434,6 +2450,10 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 7434660975901362413, guid: aed627340042be74486b2681768c9802, type: 3}
+      propertyPath: hitStoppen
+      value: 
+      objectReference: {fileID: 6048376750407757836}
+    - target: {fileID: 7434660975901362413, guid: aed627340042be74486b2681768c9802, type: 3}
       propertyPath: cameraTransform
       value: 
       objectReference: {fileID: 961739753}
@@ -2453,6 +2473,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3319250103939534823, guid: aed627340042be74486b2681768c9802, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6048376750407757835}
+    - targetCorrespondingSourceObject: {fileID: 3319250103939534823, guid: aed627340042be74486b2681768c9802, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6048376750407757836}
   m_SourcePrefab: {fileID: 100100000, guid: aed627340042be74486b2681768c9802, type: 3}
 --- !u!4 &6048376750407757822 stripped
 Transform:
@@ -2511,6 +2534,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
   swordAttack: {fileID: 1780743369}
+--- !u!114 &6048376750407757836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 272775434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f96cd75d856fbac4783566edaa7cf78d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitStoppen
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
