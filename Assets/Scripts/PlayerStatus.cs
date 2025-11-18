@@ -6,7 +6,7 @@ public class PlayerStatus : MonoBehaviour
     [Header("ステータス")]
     public float maxHealth = 100;
     //public float maxCore = 50;
-    public float attackPower = 1;
+    public float attackPower = 50;
     public float health;
     //public float core;
     public float StunTime = 0f;

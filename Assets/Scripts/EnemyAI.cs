@@ -27,11 +27,20 @@ public class EnemyAI : MonoBehaviour
     public float patrolRadius = 5f;
     public float patrolWaitTime = 2f;
 
+    [Header("ガード設定")]
+    public float guardAngle = 90f; // ガード方向の角度範囲
+    public float guardDuration = 3f; // ガード持続時間
+    public float guardDistance = 3f; // 攻撃感知距離
+    public float guardChance = 1f; // ガード発動確率
+    public float guardTimer = 0f;
+
     private NavMeshAgent agent;
     private Animator anim;
     private Transform player;
     private Vector3 patrolTarget;
     private float waitTimer = 0f;
+
+    public bool canGuard = false;// ガード可能かどうか
 
     void Start()
     {
@@ -58,6 +67,8 @@ public class EnemyAI : MonoBehaviour
             case EnemyState.Attack:
                 AttackPlayer();
                 break;
+           
+
         }
     }
 
@@ -172,6 +183,7 @@ public class EnemyAI : MonoBehaviour
         return false;
     }
     #endregion
+
 }
 
 

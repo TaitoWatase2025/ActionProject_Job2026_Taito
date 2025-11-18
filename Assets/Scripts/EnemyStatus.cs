@@ -5,10 +5,10 @@ public class EnemyStatus : MonoBehaviour
 {
     [Header("ステータス")]
     public float maxHealth = 100;
-    //public float maxCore = 50;
+    //public float maxCore = 50;  
     public float AttackPower = 10;
     public float health;
-    //public float core;
+    //public float core;  
 
     public event Action On10PercentHealthDown;
     public event Action<float> OnHealthChanged;
@@ -22,9 +22,10 @@ public class EnemyStatus : MonoBehaviour
         health = maxHealth;
         hitstop = GetComponent<HitStop>();
     }
-    public void TakeDamage(float amount)
+    public void TakeDamage(float amount, Vector3 attackOrigin)
     {
         if (health <= 0) return;
+
         health -= amount;
         health = Mathf.Max(health, 0);
         Debug.Log("ダメージを受けた: " + amount + " 残り体力: " + health);
@@ -38,6 +39,7 @@ public class EnemyStatus : MonoBehaviour
             Die();
         }
     }
+
     public void Die()
     {
         Debug.Log("Enemy Died");

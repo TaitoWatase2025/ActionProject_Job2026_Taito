@@ -1788,6 +1788,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwordAttack
   attackCollider: {fileID: 654443429}
+  bloodParticlePrefab: {fileID: 5651394410912378698, guid: 2b89bbddbf30bca4ab1f69266b9561f7, type: 3}
 --- !u!65 &654443429
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2200,6 +2201,12 @@ MonoBehaviour:
   attackCooldown: 2
   patrolRadius: 5
   patrolWaitTime: 2
+  guardAngle: 90
+  guardDuration: 3
+  guardDistance: 3
+  guardChance: 0.5
+  guardTimer: 0
+  canGuard: 0
 --- !u!195 &1693098022
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2352,7 +2359,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc14d0b4e297b374cbb9364bd78751cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwordAttack
-  attackCollider: {fileID: 0}
+  attackCollider: {fileID: 1780743368}
+  bloodParticlePrefab: {fileID: 5651394410912378698, guid: 2b89bbddbf30bca4ab1f69266b9561f7, type: 3}
 --- !u!1001 &3770188634219173752
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2518,7 +2526,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStatus
   maxHealth: 100
-  attackPower: 1
+  attackPower: 50
   health: 0
   StunTime: 0
 --- !u!114 &6048376750407757835

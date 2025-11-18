@@ -1,8 +1,10 @@
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class SwordAttack : MonoBehaviour
 {
     public Collider attackCollider; // 攻撃判定用
+    public GameObject bloodParticlePrefab; // 血しぶきエフェクト用
     private PlayerStatus playerStatus;
     private EnemyStatus enemyStatus;
 
@@ -33,13 +35,24 @@ public class SwordAttack : MonoBehaviour
         // 攻撃対象のステータスを取得
         PlayerStatus targetPlayer = other.GetComponent<PlayerStatus>();
         EnemyStatus targetEnemy = other.GetComponent<EnemyStatus>();
-
+        void SpawnBlood(Vector3 hitpoint)
+        {
+            if (bloodParticlePrefab != null)
+            {
+                Vector3 attackDirection = (other.transform.position - transform.position).normalized;// 攻撃方向を計算
+                GameObject blood = Instantiate(bloodParticlePrefab, hitpoint, Quaternion.LookRotation(attackDirection));// 血しぶきエフェクトを生成
+                Destroy(blood, 2f); // 2秒後にエフェクトを破棄
+            }
+        }
         if (playerStatus != null && targetEnemy != null)
         {
+            Vector3 hitpoint = other.ClosestPoint(transform.position);
+            SpawnBlood(hitpoint);
+
             HitStop attackerHitStop = playerStatus.GetComponent<HitStop>();
             HitStop enemyHitStop = targetEnemy.GetComponent<HitStop>();
             // プレイヤーの攻撃で敵にダメージ
-            targetEnemy.TakeDamage(playerStatus.attackPower);
+            targetEnemy.TakeDamage(playerStatus.attackPower, transform.position);
             if (attackerHitStop != null)
             {
                 attackerHitStop.StartCoroutine(attackerHitStop.Stop(0.08f));
@@ -68,6 +81,9 @@ public class SwordAttack : MonoBehaviour
                 Debug.Log("Player Guarded the Attack!");
                 return;
             }
+            Vector3 hitpoint = other.ClosestPoint(transform.position);
+            SpawnBlood(hitpoint);
+
             // 敵の攻撃でプレイヤーにダメージ
             targetPlayer.TakeDamage(enemyStatus.AttackPower);
             playerController?.OnHit();
