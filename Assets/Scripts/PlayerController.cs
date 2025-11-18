@@ -45,6 +45,8 @@ public class PlayerController : MonoBehaviour
     private float jumpBufferTime = 0.1f;
     private float coyoteTimeCounter;
     private float jumpBufferCounter;
+
+    public bool isGuarding = false;
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
@@ -67,6 +69,10 @@ public class PlayerController : MonoBehaviour
 
         // スプリント（IsPressedで判定）
         controls.Player.Sprint.performed += ctx => { };
+
+        //ガード(isGuardingで判定)
+        controls.Player.Guard.performed += ctx => isGuarding = true;
+        controls.Player.Guard.canceled += ctx => isGuarding = false;
     }
 
 
@@ -76,12 +82,21 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         if (GetComponent<PlayerStatus>().IsStunned()) return; // スタン中は操作不可
-        HandleJump();      // 先にジャンプ判定
-        HandleGravity();
-        HandleDodge();
-        HandleMove();
+
+        HandleGravity();// 重力処理
+
+        if (!isGuarding)
+        {
+            HandleJump(); // 先にジャンプ判定
+            HandleDodge();// 回避処理
+            HandleMove(); // 移動処理
+        }
+
+
         anim.SetBool("IsGrounded", controller.isGrounded);// 接地情報をアニメーターに渡す
         anim.SetFloat("Speed", controller.velocity.magnitude);// 速度情報をアニメーターに渡す
+        anim.SetBool("IsGuarding", isGuarding);// ガード情報をアニメーターに渡す
+
         UpdateAnimator();
     }
 
@@ -196,7 +211,7 @@ public class PlayerController : MonoBehaviour
     #region 回避
     private void HandleDodgeInput()
     {
-        if (state == PlayerState.Attacking || isDodging||GetComponent<PlayerStatus>().IsStunned()) return;
+        if (state == PlayerState.Attacking || isDodging || GetComponent<PlayerStatus>().IsStunned()) return;
 
         state = PlayerState.Dodging;
         isDodging = true;
@@ -238,12 +253,16 @@ public class PlayerController : MonoBehaviour
     {
         // 被弾時の処理（アニメーションイベントから呼び出し）
         // アニメーション時間操作できない
-
         state = PlayerState.Idle;
         comboStep = 0;
         anim.SetInteger("ComboStep", comboStep);
         anim.SetTrigger("AttackHit");
         GetComponent<PlayerStatus>().StunTime = 1.5f; // スタン時間を設定
+    }
+    public void OnGuardHit()
+    {
+        // ガード被弾時の処理（アニメーションイベントから呼び出し）
+        anim.SetTrigger("GuardHit");
     }
     #endregion
 

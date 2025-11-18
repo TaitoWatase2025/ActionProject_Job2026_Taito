@@ -1,41 +1,32 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 using UnityEngine.AI;
 
 public class HitStop : MonoBehaviour
 {
-    private bool isHitStopped = false;
-
-    public IEnumerator DoHitStop(float duration)
+    public IEnumerator Stop(float duration)
     {
-        if (isHitStopped) yield break;
-        isHitStopped = true;
+        float timer = 0f;
 
-        // Animatorí‚é~
-        Animator[] animators = GetComponentsInChildren<Animator>();
-        foreach (var a in animators) a.speed = 0f;
+        // Animator/à⁄ìÆÇí‚é~
+        Animator anim = GetComponent<Animator>();
+        if (anim != null) anim.speed = 0;
 
-        // NavMeshAgentí‚é~
-        NavMeshAgent agent = GetComponent<NavMeshAgent>();
-        float agentSpeed = 0f;
-        if (agent != null)
+        CharacterController cc = GetComponent<CharacterController>();
+        NavMeshAgent nav = GetComponent<UnityEngine.AI.NavMeshAgent>();
+
+        if (nav != null) nav.velocity = Vector3.zero;
+
+        // Åö é¿éûä‘Ç≈í‚é~ÅiTime.timeScale égÇÌÇ»Ç¢Åj
+        while (timer < duration)
         {
-            agentSpeed = agent.speed;
-            agent.speed = 0f;
-            agent.isStopped = true;
+            timer += Time.unscaledDeltaTime;
+            yield return null;
         }
-
-        yield return new WaitForSeconds(duration);
 
         // çƒäJ
-        foreach (var a in animators) a.speed = 1f;
-        if (agent != null)
-        {
-            agent.speed = agentSpeed;
-            agent.isStopped = false;
-        }
-
-        isHitStopped = false;
+        if (anim != null) anim.speed = 1;
     }
 }
+
 

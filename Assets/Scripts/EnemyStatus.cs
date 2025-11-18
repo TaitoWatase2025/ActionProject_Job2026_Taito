@@ -33,10 +33,6 @@ public class EnemyStatus : MonoBehaviour
         {
             On10PercentHealthDown?.Invoke();
         }
-        if (hitstop != null)
-        {
-            StartCoroutine(hitstop.DoHitStop(hitStopDuration));
-        }
         if (health <= 0)
         {
             Die();
