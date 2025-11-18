@@ -5,6 +5,7 @@ public class SwordAttack : MonoBehaviour
 {
     public Collider attackCollider; // 攻撃判定用
     public GameObject bloodParticlePrefab; // 血しぶきエフェクト用
+    public GameObject sparkParticlePrefab; // 火花エフェクト用
     private PlayerStatus playerStatus;
     private EnemyStatus enemyStatus;
 
@@ -44,6 +45,15 @@ public class SwordAttack : MonoBehaviour
                 Destroy(blood, 2f); // 2秒後にエフェクトを破棄
             }
         }
+        void SpawnSpark(Vector3 hitPoint)
+        {
+            if (sparkParticlePrefab != null)
+            {
+                Vector3 attackDirection = (other.transform.position - transform.position).normalized;
+                GameObject spark = Instantiate(sparkParticlePrefab, hitPoint, Quaternion.LookRotation(attackDirection));
+                Destroy(spark, 2f);
+            }
+        }
         if (playerStatus != null && targetEnemy != null)
         {
             Vector3 hitpoint = other.ClosestPoint(transform.position);
@@ -67,11 +77,15 @@ public class SwordAttack : MonoBehaviour
         else if (enemyStatus != null && targetPlayer != null)
         {
             PlayerController playerController = targetPlayer.GetComponent<PlayerController>();
+            Vector3 hitPoint = other.ClosestPoint(transform.position);
+
             if (playerController != null && playerController.isGuarding)
             {
                 // ガード中はダメージを軽減
                 targetPlayer.TakeDamage(enemyStatus.AttackPower * 0.2f); // 20%のダメージ
                 playerController?.OnGuardHit();
+
+                SpawnSpark(hitPoint);
                 Animator enemyAnim = enemyStatus.GetComponent<Animator>();
                 if (enemyAnim != null)
                 {
