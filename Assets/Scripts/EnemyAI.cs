@@ -16,10 +16,10 @@ public class EnemyAI : MonoBehaviour
     public LayerMask obstacleLayer;
 
     [Header("攻撃")]
-    public float attackRange = 5f;       // 攻撃距離
-    public float minAttackRange = 2f;    // 近すぎた際
-    public float shortAttackRange = 4f; // 近距離攻撃距離
-    public float attackAngle = 60f;      // 正面攻撃範囲（度）
+    public float attackRange = 5f;
+    public float minAttackRange = 2f;
+    public float shortAttackRange = 4f;
+    public float attackAngle = 60f;
     public float attackCooldown = 1.5f;
     private float lastAttackTime = 0f;
 
@@ -27,12 +27,10 @@ public class EnemyAI : MonoBehaviour
     public float patrolRadius = 5f;
     public float patrolWaitTime = 2f;
 
-    [Header("ガード設定")]
-    public float guardAngle = 90f; // ガード方向の角度範囲
-    public float guardDuration = 3f; // ガード持続時間
-    public float guardDistance = 3f; // 攻撃感知距離
-    public float guardChance = 1f; // ガード発動確率
-    public float guardTimer = 0f;
+    [Header("落下")]
+    public float gravity = 9.8f;
+    public LayerMask groundLayer;
+    public float groundCheckDistance = 0.1f;
 
     private NavMeshAgent agent;
     private Animator anim;
@@ -40,7 +38,8 @@ public class EnemyAI : MonoBehaviour
     private Vector3 patrolTarget;
     private float waitTimer = 0f;
 
-    public bool canGuard = false;// ガード可能かどうか
+    private bool isGrounded;
+    private float verticalVelocity = 0f;
 
     void Start()
     {
@@ -55,6 +54,11 @@ public class EnemyAI : MonoBehaviour
     {
         anim.SetFloat("Speed", agent.velocity.magnitude);
 
+        // 落下と地面判定
+        CheckGround();
+        ApplyGravity();
+
+        // ステートごとの処理
         switch (state)
         {
             case EnemyState.Patrol:
@@ -67,10 +71,36 @@ public class EnemyAI : MonoBehaviour
             case EnemyState.Attack:
                 AttackPlayer();
                 break;
-           
-
         }
     }
+
+    #region 落下・地面判定
+    void CheckGround()
+    {
+        // 足元からRayを飛ばして地面判定
+        isGrounded = Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, groundCheckDistance + 0.1f, groundLayer);
+
+        if (isGrounded && verticalVelocity < 0f)
+        {
+            verticalVelocity = 0f;
+            anim.SetBool("IsFalling", false);
+            anim.SetTrigger("Land");
+        }
+        else
+        {
+            anim.SetBool("IsFalling", true);
+        }
+    }
+
+    void ApplyGravity()
+    {
+        if (!isGrounded)
+        {
+            verticalVelocity -= gravity * Time.deltaTime;
+            transform.position += Vector3.up * verticalVelocity * Time.deltaTime;
+        }
+    }
+    #endregion
 
     #region パトロール
     void Patrol()
@@ -133,26 +163,20 @@ public class EnemyAI : MonoBehaviour
     {
         agent.destination = transform.position; // 攻撃中は停止
 
-        //HPが10％減ると発動
-
-
-        //近い場合は後退
         float distance = Vector3.Distance(transform.position, player.position);
         Vector3 dirToPlayer = (player.position - transform.position).normalized;
         float angle = Vector3.Angle(transform.forward, dirToPlayer);
-        if (distance < minAttackRange)//近すぎたら後退
+
+        if (distance < minAttackRange)
         {
             anim.SetTrigger("BackJump");
             return;
         }
-        if (distance < shortAttackRange && angle <= attackAngle / 1.5f)//近距離攻撃
+        if (distance < shortAttackRange && angle <= attackAngle / 1.5f)
         {
             anim.SetTrigger("ShortAttack");
             return;
         }
-
-
-        agent.destination = transform.position;//停止
 
         if (IsPlayerInAttackRange() && Time.time - lastAttackTime >= attackCooldown)
         {
@@ -168,23 +192,17 @@ public class EnemyAI : MonoBehaviour
 
     bool IsPlayerInAttackRange()
     {
-        // 距離判定
         float distance = Vector3.Distance(transform.position, player.position);
-
         if (distance > attackRange) return false;
 
-        // 正面判定
         Vector3 dirToPlayer = (player.position - transform.position).normalized;
         float angle = Vector3.Angle(transform.forward, dirToPlayer);
 
-        if (angle <= attackAngle / 1.5f)
-            return true;
-
-        return false;
+        return angle <= attackAngle / 1.5f;
     }
     #endregion
-
 }
+
 
 
 
