@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
 
-public enum EnemyState { Chase, Attack, Falling }
+public enum EnemyState { Chase, Attack, Falling, Die }
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
@@ -43,7 +43,7 @@ public class EnemyAI : MonoBehaviour
 
     private bool isGrounded;
     private float verticalVelocity = 0f;
-    
+
 
     void Start()
     {
@@ -63,6 +63,7 @@ public class EnemyAI : MonoBehaviour
 
     void Update()
     {
+        if (state == EnemyState.Die) return;
         anim.SetFloat("Speed", agent.velocity.magnitude);
 
         if (!agent.enabled)
@@ -78,6 +79,7 @@ public class EnemyAI : MonoBehaviour
             case EnemyState.Chase: if (agent.isOnNavMesh) ChasePlayer(); break;
             case EnemyState.Attack: AttackPlayer(); break;
             case EnemyState.Falling: break;
+            case EnemyState.Die: return;
         }
     }
 
@@ -204,6 +206,7 @@ public class EnemyAI : MonoBehaviour
     #region çUåÇ
     void AttackPlayer()
     {
+        if(state == EnemyState.Die) return;
         agent.destination = transform.position; // çUåÇíÜÇÕí‚é~
 
         float distance = Vector3.Distance(transform.position, player.position);
@@ -247,9 +250,10 @@ public class EnemyAI : MonoBehaviour
     #region éÄñSîªíË
     private void HandleDeath()
     {
-        if(agent.isOnNavMesh) agent.enabled = false;
+        state = EnemyState.Die;
+        agent.enabled = false;
         anim.SetTrigger("Die");
-        StartCoroutine(RemoveAfterDelay(3f));   
+        StartCoroutine(RemoveAfterDelay(3f));
     }
     private IEnumerator RemoveAfterDelay(float delay)
     {
