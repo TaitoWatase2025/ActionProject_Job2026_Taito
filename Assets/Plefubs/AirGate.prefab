@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3345249880415587742}
   - component: {fileID: 7499454802022211513}
   m_Layer: 0
-  m_Name: Gate2
+  m_Name: AirGate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

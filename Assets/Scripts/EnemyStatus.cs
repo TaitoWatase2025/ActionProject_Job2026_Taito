@@ -9,6 +9,7 @@ public class EnemyStatus : MonoBehaviour
     public float AttackPower = 10;
     public float health;
     //public float core;  
+    public bool isDead = false;
 
     public event Action On10PercentHealthDown;
     public event Action<float> OnHealthChanged;
@@ -36,6 +37,7 @@ public class EnemyStatus : MonoBehaviour
         }
         if (health <= 0)
         {
+            isDead= true;
             Die();
         }
     }

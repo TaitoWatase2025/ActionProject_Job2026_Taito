@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
 
-public enum EnemyState {  Chase, Attack, Falling }
+public enum EnemyState { Chase, Attack, Falling }
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
@@ -42,16 +42,22 @@ public class EnemyAI : MonoBehaviour
 
     private bool isGrounded;
     private float verticalVelocity = 0f;
+    private EnemyStatus Status;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
+        Status = GetComponent<EnemyStatus>();
 
-        if(!agent.isOnNavMesh)
+        if (!agent.isOnNavMesh)
         {
             agent.enabled = false;
+        }
+        if (Status != null)
+        {
+            Status.OnDeath += HandleDeath;
         }
     }
 
@@ -95,11 +101,11 @@ public class EnemyAI : MonoBehaviour
                 anim.SetBool("IsFalling", false);
                 anim.SetTrigger("Land");
 
-                if(NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+                if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
                 {
                     transform.position = hit.position;
 
-                    if(!agent.enabled) agent.enabled = true;
+                    if (!agent.enabled) agent.enabled = true;
                     agent.isStopped = true;
                     StartCoroutine(ReturnToChaseAfterLanding());
                 }
@@ -130,11 +136,11 @@ public class EnemyAI : MonoBehaviour
 
     private IEnumerator WaitForNavMesh()
     {
-        while(!agent.isOnNavMesh)
+        while (!agent.isOnNavMesh)
             yield return null;
 
         agent.isStopped = false;
-        state=EnemyState.Chase;
+        state = EnemyState.Chase;
 
     }
 
@@ -145,8 +151,8 @@ public class EnemyAI : MonoBehaviour
             verticalVelocity -= gravity * Time.deltaTime;
             transform.position += Vector3.up * verticalVelocity * Time.deltaTime;
 
-            if(agent.isOnNavMesh)
-                agent.isStopped = true; 
+            if (agent.isOnNavMesh)
+                agent.isStopped = true;
         }
     }
     #endregion
@@ -185,10 +191,10 @@ public class EnemyAI : MonoBehaviour
     #region í«ê’
     void ChasePlayer()
     {
-        if(!agent.enabled) return;
+        if (!agent.enabled) return;
 
         agent.destination = player.position;
-        if(IsPlayerInAttackRange())
+        if (IsPlayerInAttackRange())
         {
             state = EnemyState.Attack;
         }
@@ -237,6 +243,21 @@ public class EnemyAI : MonoBehaviour
 
         return angle <= attackAngle / 1.5f;
     }
+    #endregion
+    #region éÄñSîªíË
+    private void HandleDeath()
+    {
+        anim.SetTrigger("Die");
+        agent.isStopped = true;
+        agent.enabled = false;
+        StartCoroutine(RemoveAfterDelay(3f));   
+    }
+    private IEnumerator RemoveAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Destroy(gameObject);
+    }
+
     #endregion
 }
 
