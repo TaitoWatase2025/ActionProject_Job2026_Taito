@@ -218,7 +218,7 @@ public class EnemyAI : MonoBehaviour
             anim.SetTrigger("BackJump");
             return;
         }
-        if (distance < shortAttackRange && angle <= attackAngle / 1.5f)
+        if (distance < shortAttackRange && angle <= attackAngle / 0.5f)
         {
             anim.SetTrigger("ShortAttack");
             return;

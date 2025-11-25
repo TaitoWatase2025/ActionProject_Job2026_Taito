@@ -17,6 +17,7 @@ public class PlayerStatus : MonoBehaviour
     void Start()
     {
         health = maxHealth;
+        OnHealthChanged?.Invoke(health / maxHealth);
     }
     void Update()
     {

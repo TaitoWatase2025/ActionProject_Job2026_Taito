@@ -23,6 +23,7 @@ public class EnemyStatus : MonoBehaviour
     {
         health = maxHealth;
         hitstop = GetComponent<HitStop>();
+        OnHealthChanged?.Invoke(1f);
     }
     public void TakeDamage(float amount, Vector3 attackOrigin)
     {
