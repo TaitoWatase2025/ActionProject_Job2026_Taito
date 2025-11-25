@@ -14,6 +14,7 @@ public class EnemyStatus : MonoBehaviour
     public event Action On10PercentHealthDown;
     public event Action<float> OnHealthChanged;
     public event Action OnDeath;
+    
 
     private HitStop hitstop;
     public float hitStopDuration = 0.1f;

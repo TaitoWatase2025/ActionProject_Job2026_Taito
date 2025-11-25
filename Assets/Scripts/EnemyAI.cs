@@ -37,12 +37,13 @@ public class EnemyAI : MonoBehaviour
     private NavMeshAgent agent;
     private Animator anim;
     private Transform player;
+    private EnemyStatus Status;
     //private Vector3 patrolTarget;
     //private float waitTimer = 0f;
 
     private bool isGrounded;
     private float verticalVelocity = 0f;
-    private EnemyStatus Status;
+    
 
     void Start()
     {
@@ -50,7 +51,6 @@ public class EnemyAI : MonoBehaviour
         anim = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         Status = GetComponent<EnemyStatus>();
-
         if (!agent.isOnNavMesh)
         {
             agent.enabled = false;
@@ -247,9 +247,8 @@ public class EnemyAI : MonoBehaviour
     #region Ž€–S”»’è
     private void HandleDeath()
     {
+        if(agent.isOnNavMesh) agent.enabled = false;
         anim.SetTrigger("Die");
-        agent.isStopped = true;
-        agent.enabled = false;
         StartCoroutine(RemoveAfterDelay(3f));   
     }
     private IEnumerator RemoveAfterDelay(float delay)

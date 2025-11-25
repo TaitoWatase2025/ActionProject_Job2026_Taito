@@ -950,8 +950,8 @@ MonoBehaviour:
   groundPortalPrefab: {fileID: 7427504934723869950, guid: d0c292be37b67e2488073ea2d2d23ad2, type: 3}
   airPortalPrefab: {fileID: 4409922887363102835, guid: 1f1d4cc4efdcbff4fa87b7e260069693, type: 3}
   airHeight: 5
-  portalLifeTime: 2
-  spawnDelay: 1
+  portalLifeTime: 3
+  spawnDelay: 3
   player: {fileID: 6048376750407757828}
 --- !u!4 &1838825635
 Transform:

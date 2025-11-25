@@ -1699,6 +1699,7 @@ MonoBehaviour:
   maxHealth: 100
   AttackPower: 10
   health: 0
+  isDead: 0
   hitStopDuration: 0.1
 --- !u!114 &3002906336182703921
 MonoBehaviour:
