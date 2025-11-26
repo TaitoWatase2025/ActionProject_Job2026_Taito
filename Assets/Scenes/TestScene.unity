@@ -1449,7 +1449,7 @@ MonoBehaviour:
   enemyPrefab: {fileID: 5205967574232431472, guid: b60806eaff62fc94392320f736b699ad, type: 3}
   groundPortalPrefab: {fileID: 7427504934723869950, guid: d0c292be37b67e2488073ea2d2d23ad2, type: 3}
   airPortalPrefab: {fileID: 4409922887363102835, guid: 1f1d4cc4efdcbff4fa87b7e260069693, type: 3}
-  enemyHPUIPrefab: {fileID: 2949820374039626330, guid: 20f56b6a7693bd1418416fa5046c4e5e, type: 3}
+  enemyHPUIPrefab: {fileID: 6261786316861904, guid: fb2999af9ef9c72488b57d12d7726465, type: 3}
   airHeight: 5
   portalLifeTime: 3
   spawnDelay: 3
