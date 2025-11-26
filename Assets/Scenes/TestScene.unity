@@ -1632,6 +1632,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 4646033724235474453, guid: aed627340042be74486b2681768c9802, type: 3}
+      propertyPath: maxHealth
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7434660975901362413, guid: aed627340042be74486b2681768c9802, type: 3}
       propertyPath: cameraTransform
       value: 

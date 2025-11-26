@@ -9,7 +9,7 @@ public class TitleMenu : MonoBehaviour
 
         if (sceneFader != null)
         {
-            sceneFader.FadeToScene("GameScene");
+            sceneFader.FadeToScene("TestScene");
         }
     }
     public void OnClickExit()

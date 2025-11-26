@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    public enum PlayerState { Idle, Walking, Running, Jumping, Attacking, Dodging }
+    public enum PlayerState { Idle, Walking, Running, Jumping, Attacking, Dodging, Die }
     public PlayerState state = PlayerState.Idle;
 
     [Header("移動設定")]
@@ -21,11 +21,13 @@ public class PlayerController : MonoBehaviour
     public float rotationSpeed = 10f;
 
     private CharacterController controller;
+    private PlayerStatus playerStatus;
     private Vector2 moveInput;
     private float verticalVelocity;
     public Transform cameraTransform;
     public Transform playerTransform;
     public Animator anim;
+    public DeathManager deathManager;
 
     private PlayerControls controls;
     private Vector3 previousPosition;
@@ -51,6 +53,9 @@ public class PlayerController : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         if (playerTransform == null) playerTransform = transform;// デフォルトで自分自身を設定
+
+        playerStatus = GetComponent<PlayerStatus>();
+        if (playerStatus != null) playerStatus.Ondeath += OnDeath;
 
         controls = new PlayerControls();
 
@@ -279,10 +284,18 @@ public class PlayerController : MonoBehaviour
     public void OnDeath()
     {
         // 死亡時の処理（アニメーションイベントから呼び出し）
-        state = PlayerState.Idle;
+        state = PlayerState.Die;
         comboStep = 0;
-        anim.SetTrigger("Death");
-        // 操作無効化などの追加処理をここに記述
+        anim.SetTrigger("Die");
+        controls.Player.Disable(); // 操作無効化
+        verticalVelocity = 0f; // 重力リセット
+
+        var colliders = GetComponentsInChildren<Collider>();
+        foreach (var col in colliders) col.enabled = false; // コライダー無効化
+
+        if (deathManager != null)
+            deathManager.HandlePlayerDeath("プレイヤーは死亡しました");
+
     }
     #endregion
 }
