@@ -293,8 +293,8 @@ public class PlayerController : MonoBehaviour
         var colliders = GetComponentsInChildren<Collider>();
         foreach (var col in colliders) col.enabled = false; // コライダー無効化
 
-        if (deathManager != null)
-            deathManager.HandlePlayerDeath("プレイヤーは死亡しました");
+        // Replace the deprecated FindObjectOfType with FindFirstObjectByType
+        FindFirstObjectByType<DeathManager>().HandlePlayerDeath();
 
     }
     #endregion
