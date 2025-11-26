@@ -275,4 +275,14 @@ public class PlayerController : MonoBehaviour
         anim.SetInteger("ComboStep", comboStep);
         previousPosition = playerTransform.position;
     }
+    #region 死亡判定
+    public void OnDeath()
+    {
+        // 死亡時の処理（アニメーションイベントから呼び出し）
+        state = PlayerState.Idle;
+        comboStep = 0;
+        anim.SetTrigger("Death");
+        // 操作無効化などの追加処理をここに記述
+    }
+    #endregion
 }

@@ -11,8 +11,7 @@ public class EnemySpawner : MonoBehaviour
     public GameObject enemyPrefab;
     public GameObject groundPortalPrefab;
     public GameObject airPortalPrefab;
-    public GameObject enemyHPUIPrefab;  // Canvas用HPバーPrefab
-    public Transform canvasTransform;    // CanvasのTransform
+    public GameObject enemyHPUIPrefab;  // World Space Canvas HPバー Prefab
 
     [Header("スポーン設定")]
     public float airHeight = 3f;
@@ -32,10 +31,9 @@ public class EnemySpawner : MonoBehaviour
             StartCoroutine(SpawnWave());
         }
     }
-
     bool PlayerHasMoved()
     {
-        return player.moveSpeed > 0.1f;
+        return player != null && player.moveSpeed > 0.1f;
     }
 
     IEnumerator SpawnWave()
@@ -55,8 +53,7 @@ public class EnemySpawner : MonoBehaviour
     {
         Vector3 pos = GetRandomPosition();
         bool spawnInAir = Random.value > 0.5f;
-        if (spawnInAir)
-            pos.y += airHeight;
+        if (spawnInAir) pos.y += airHeight;
 
         GameObject portal = Instantiate(spawnInAir ? airPortalPrefab : groundPortalPrefab, pos, Quaternion.identity);
         Destroy(portal, portalLifeTime);
@@ -64,21 +61,38 @@ public class EnemySpawner : MonoBehaviour
         GameObject enemy = Instantiate(enemyPrefab, pos, Quaternion.identity);
         aliveEnemies++;
 
-        // HPバー生成
-        if (enemyHPUIPrefab != null && canvasTransform != null)
+        // HPバー生成（World Space Canvas）- Enemyの子として生成
+        if (enemyHPUIPrefab != null)
         {
-            GameObject hpBar = Instantiate(enemyHPUIPrefab, canvasTransform);
+            GameObject hpBar = Instantiate(enemyHPUIPrefab, enemy.transform);
+            hpBar.transform.localPosition = Vector3.zero;
+            hpBar.transform.localScale = Vector3.one;
+            hpBar.SetActive(true);
 
-            // HPバー追従用
             HPBarFollow follower = hpBar.GetComponent<HPBarFollow>();
-            follower.target = enemy.transform.Find("HeadPoint");
+            Transform head = enemy.transform.Find("HeadPoint");
+            if (head != null)
+                follower.target = head;
 
-            // HP同期
+            // カメラ設定
+            if (follower.cam == null)
+                follower.cam = Camera.main;
+
             EnemyStatus enemyStatus = enemy.GetComponent<EnemyStatus>();
-            hpBar.GetComponent<EnemyHPManager>().Initialize(enemyStatus);
+            if (enemyStatus != null)
+            {
+                // 初期HP反映
+                follower.SetHP(enemyStatus.health, enemyStatus.maxHealth);
+
+                // HP変化イベント登録
+                enemyStatus.OnHealthChanged += (value) =>
+                {
+                    follower.SetHP(value, enemyStatus.maxHealth);
+                };
+            }
         }
 
-        // 敵が死んだらカウント減
+        // 敵死亡通知
         EnemyDeathNotifier notifier = enemy.AddComponent<EnemyDeathNotifier>();
         notifier.onDeath = () => { aliveEnemies--; };
     }
@@ -86,14 +100,14 @@ public class EnemySpawner : MonoBehaviour
     Vector3 GetRandomPosition()
     {
         return center + new Vector3(
-            Random.Range(-size.x / 2, size.x / 2),
-            Random.Range(-size.y / 2, size.y / 2),
-            Random.Range(-size.z / 2, size.z / 2)
+            Random.Range(-size.x / 2f, size.x / 2f),
+            Random.Range(-size.y / 2f, size.y / 2f),
+            Random.Range(-size.z / 2f, size.z / 2f)
         );
     }
 }
 
-// 敵死亡通知
+// 敵死亡通知用
 public class EnemyDeathNotifier : MonoBehaviour
 {
     public System.Action onDeath;
