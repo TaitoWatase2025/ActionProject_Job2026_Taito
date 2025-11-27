@@ -1147,6 +1147,7 @@ MonoBehaviour:
   cameraTransform: {fileID: 0}
   playerTransform: {fileID: 197941885819539104}
   anim: {fileID: 148126502097942101}
+  deathManager: {fileID: 0}
   isGuarding: 0
 --- !u!54 &6527924462633707161
 Rigidbody:

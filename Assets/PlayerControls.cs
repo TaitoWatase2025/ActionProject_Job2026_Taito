@@ -145,6 +145,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Rock"",
+                    ""type"": ""Button"",
+                    ""id"": ""929efcad-291e-4222-baf9-b1f90ef8b874"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -257,6 +266,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Guard"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6613493c-7177-4659-bcb8-f4da57aa04ac"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Rock"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -271,6 +291,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Dodge = m_Player.FindAction("Dodge", throwIfNotFound: true);
         m_Player_Guard = m_Player.FindAction("Guard", throwIfNotFound: true);
+        m_Player_Rock = m_Player.FindAction("Rock", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
@@ -357,6 +378,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_Dodge;
     private readonly InputAction m_Player_Guard;
+    private readonly InputAction m_Player_Rock;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -392,6 +414,10 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Guard".
         /// </summary>
         public InputAction @Guard => m_Wrapper.m_Player_Guard;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Rock".
+        /// </summary>
+        public InputAction @Rock => m_Wrapper.m_Player_Rock;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -436,6 +462,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Guard.started += instance.OnGuard;
             @Guard.performed += instance.OnGuard;
             @Guard.canceled += instance.OnGuard;
+            @Rock.started += instance.OnRock;
+            @Rock.performed += instance.OnRock;
+            @Rock.canceled += instance.OnRock;
         }
 
         /// <summary>
@@ -465,6 +494,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Guard.started -= instance.OnGuard;
             @Guard.performed -= instance.OnGuard;
             @Guard.canceled -= instance.OnGuard;
+            @Rock.started -= instance.OnRock;
+            @Rock.performed -= instance.OnRock;
+            @Rock.canceled -= instance.OnRock;
         }
 
         /// <summary>
@@ -547,5 +579,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnGuard(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Rock" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRock(InputAction.CallbackContext context);
     }
 }

@@ -23,7 +23,7 @@ public class EnemyStatus : MonoBehaviour
     {
         health = maxHealth;
         hitstop = GetComponent<HitStop>();
-        OnHealthChanged?.Invoke(1f);
+        OnHealthChanged?.Invoke(health);
     }
     public void TakeDamage(float amount, Vector3 attackOrigin)
     {
@@ -32,7 +32,7 @@ public class EnemyStatus : MonoBehaviour
         health -= amount;
         health = Mathf.Max(health, 0);
         Debug.Log("ダメージを受けた: " + amount + " 残り体力: " + health);
-        OnHealthChanged?.Invoke(health / maxHealth);
+        OnHealthChanged?.Invoke(health);
         if (health <= maxHealth * 0.1f)
         {
             On10PercentHealthDown?.Invoke();

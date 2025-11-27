@@ -1678,21 +1678,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DarkSoulsEnemyAI
   state: 0
   viewRadius: 10
-  viewAngle: 120
+  viewAngle: 360
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 0
-  attackRange: 4
-  minAttackRange: 1
-  shortAttackRange: 3
-  attackAngle: 60
-  attackCooldown: 2
-  gravity: 9.8
+  attackRange: 5
+  minRange: 2
+  shortRange: 4
+  attackAngle: 30
+  attackCooldown: 10
+  gravity: 9
   groundLayer:
     serializedVersion: 2
     m_Bits: 1
   groundCheckDistance: 0.1
-  LandingDelay: 2
+  LandingDelay: 0.5
 --- !u!136 &8309286582281549286
 CapsuleCollider:
   m_ObjectHideFlags: 0

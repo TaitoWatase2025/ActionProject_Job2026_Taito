@@ -9,13 +9,10 @@ public class EnemySpawner : MonoBehaviour
 
     [Header("Prefab設定")]
     public GameObject enemyPrefab;
-    public GameObject groundPortalPrefab;
-    public GameObject airPortalPrefab;
     public GameObject enemyHPUIPrefab;  // World Space Canvas HPバー Prefab
 
     [Header("スポーン設定")]
     public float airHeight = 3f;
-    public float portalLifeTime = 2f;
     public float spawnDelay = 1f;
 
     private int spawnCount = 1;
@@ -31,11 +28,11 @@ public class EnemySpawner : MonoBehaviour
             StartCoroutine(SpawnWave());
         }
     }
+
     bool PlayerHasMoved()
     {
         return player != null && player.moveSpeed > 0.1f;
     }
-
     IEnumerator SpawnWave()
     {
         for (int i = 0; i < spawnCount; i++)
@@ -48,15 +45,11 @@ public class EnemySpawner : MonoBehaviour
         yield return new WaitForSeconds(spawnDelay);
         StartCoroutine(SpawnWave());
     }
-
     void SpawnEnemy()
     {
+        // 空中生成
         Vector3 pos = GetRandomPosition();
-        bool spawnInAir = Random.value > 0.5f;
-        if (spawnInAir) pos.y += airHeight;
-
-        GameObject portal = Instantiate(spawnInAir ? airPortalPrefab : groundPortalPrefab, pos, Quaternion.identity);
-        Destroy(portal, portalLifeTime);
+        pos.y += airHeight;
 
         GameObject enemy = Instantiate(enemyPrefab, pos, Quaternion.identity);
         aliveEnemies++;
@@ -113,5 +106,6 @@ public class EnemyDeathNotifier : MonoBehaviour
     public System.Action onDeath;
     void OnDestroy() => onDeath?.Invoke();
 }
+
 
 
