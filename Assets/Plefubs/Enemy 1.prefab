@@ -1759,7 +1759,7 @@ MonoBehaviour:
   minRange: 2
   shortRange: 4
   attackAngle: 30
-  attackCooldown: 10
+  attackCooldown: 3
   gravity: 9
   groundLayer:
     serializedVersion: 2
