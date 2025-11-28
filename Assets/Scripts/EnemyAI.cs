@@ -9,7 +9,7 @@ public enum EnemyState { Chase, Attack, Falling, Die }
 public class EnemyAI : MonoBehaviour
 {
     [Header("ステート設定")]
-    public EnemyState state = EnemyState.Falling;
+    public EnemyState state = EnemyState.Chase;
 
     [Header("プレイヤー検知")]
     public float viewRadius = 1000f;
@@ -48,6 +48,8 @@ public class EnemyAI : MonoBehaviour
         anim = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         Status = GetComponent<EnemyStatus>();
+        agent.stoppingDistance = 1.5f;
+        lastAction = LastAction.AreaAttack;
 
         if (!agent.isOnNavMesh)
             agent.enabled = false;
@@ -59,15 +61,12 @@ public class EnemyAI : MonoBehaviour
     void Update()
     {
         if (state == EnemyState.Die) return;
-
-        anim.SetFloat("Speed", agent.velocity.magnitude);
-
-        if (!agent.enabled)
+        if (!agent.enabled || state == EnemyState.Falling)
         {
             CheckGround();
             ApplyGravity();
-            return;
         }
+        anim.SetFloat("Speed", agent.velocity.magnitude);
 
         switch (state)
         {
@@ -92,26 +91,10 @@ public class EnemyAI : MonoBehaviour
                                      groundCheckDistance + 0.1f,
                                      groundLayer);
 
-        if (isGrounded)
+        if (isGrounded && state == EnemyState.Falling)
         {
-            if (state == EnemyState.Falling)
-            {
-                verticalVelocity = 0f;
-                anim.SetBool("IsFalling", false);
-                anim.SetTrigger("Land");
-
-                if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 1f, NavMesh.AllAreas))
-                {
-                    transform.position = hit.position;
-                    if (!agent.enabled) agent.enabled = true;
-                    agent.isStopped = true;
-                    StartCoroutine(ReturnToChaseAfterLanding());
-                }
-                else
-                {
-                    StartCoroutine(WaitForNavMesh());
-                }
-            }
+            // 着地処理は ApplyGravity 内で行う
+            verticalVelocity = 0f;
         }
         else
         {
@@ -129,6 +112,7 @@ public class EnemyAI : MonoBehaviour
         yield return new WaitForSeconds(LandingDelay);
         agent.isStopped = false;
         state = EnemyState.Chase;
+        if (IsPlayerInAttackRange()) state = EnemyState.Attack;
     }
 
     private IEnumerator WaitForNavMesh()
@@ -147,6 +131,30 @@ public class EnemyAI : MonoBehaviour
             verticalVelocity -= gravity * Time.deltaTime;
             transform.position += Vector3.up * verticalVelocity * Time.deltaTime;
 
+            if (Physics.Raycast(transform.position + Vector3.up * 0.5f,
+                Vector3.down,
+                out RaycastHit hitinfo,
+                1.2f,
+                groundLayer))
+            {
+                transform.position = hitinfo.point + Vector3.up * 0.05f;
+                verticalVelocity = 0f;
+                isGrounded = true;
+                if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 2f, NavMesh.AllAreas))
+                {
+                    transform.position = hit.position;
+                }
+                if (state == EnemyState.Falling)
+                {
+                    anim.SetBool("IsFalling", false);
+                    anim.SetTrigger("Land");
+
+                    if (!agent.enabled) agent.enabled = true;
+                    agent.isStopped = true;
+                    StartCoroutine(ReturnToChaseAfterLanding());
+                }
+                return;
+            }
             if (agent.isOnNavMesh)
                 agent.isStopped = true;
         }
@@ -169,18 +177,16 @@ public class EnemyAI : MonoBehaviour
     {
         if (state == EnemyState.Die) return;
 
-        //agent.destination = transform.position; // 攻撃中は停止
+        agent.isStopped = isAttacking;
 
         float distance = Vector3.Distance(transform.position, player.position);
         Vector3 dirToPlayer = (player.position - transform.position).normalized;
         float angle = Vector3.Angle(transform.forward, dirToPlayer);
 
-        if (!isAttacking) agent.isStopped = false;
-        else agent.isStopped = true;
 
         if ((float)Status.health / Status.maxHealth <= 0.8f &&
             distance < shortRange &&
-            Random.value < 0.5f &&
+            //Random.value < 0.5f &&
             lastAction != LastAction.AreaAttack)
         {
             anim.SetTrigger("AreaAttack");
@@ -208,7 +214,10 @@ public class EnemyAI : MonoBehaviour
             }
         }
 
-        if (IsPlayerInAttackRange() && Time.time - lastAttackTime >= attackCooldown && lastAction != LastAction.Attack)
+        if (distance > attackRange &&
+            angle < attackAngle &&
+            Time.time - lastAttackTime >= attackCooldown &&
+            lastAction != LastAction.Attack)
         {
             anim.SetTrigger("Attack");
             lastAction = LastAction.Attack;
@@ -229,20 +238,26 @@ public class EnemyAI : MonoBehaviour
         float distance = Vector3.Distance(transform.position, player.position);
 
         // Attack を発動する距離範囲
-        if (distance < minRange || distance > attackRange)
-            return false;
+        if (distance > attackRange) return false;
 
         // 正面判定
         Vector3 dirToPlayer = (player.position - transform.position).normalized;
         float angle = Vector3.Angle(transform.forward, dirToPlayer);
-
         return angle <= attackAngle;
     }
 
     public void OnAttackEnd()
     {
+        if (lastAction == LastAction.BackJump) return;
         isAttacking = false;
+        if (state == EnemyState.Attack)
+        {
+            state = EnemyState.Chase;
+            agent.isStopped = false;
+        }
     }
+
+    
     #endregion
 
     #region 死亡判定

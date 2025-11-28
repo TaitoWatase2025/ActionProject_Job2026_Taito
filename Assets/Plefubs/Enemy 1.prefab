@@ -505,6 +505,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8253591703142711229}
+  - {fileID: 1906642491730028752}
   m_Father: {fileID: 243421778119922629}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2619836062728420602
@@ -1267,6 +1268,77 @@ Transform:
   - {fileID: 9049392665284377310}
   m_Father: {fileID: 600884389002927912}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4716328838709604530
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1906642491730028752}
+  - component: {fileID: 3759458521551395255}
+  - component: {fileID: 5720333104873800256}
+  m_Layer: 0
+  m_Name: AreaAttackHit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1906642491730028752
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4716328838709604530}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.40000004, z: 0}
+  m_LocalScale: {x: 6, y: 0.20000002, z: 6}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6557672419960889376}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!64 &3759458521551395255
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4716328838709604530}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &5720333104873800256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4716328838709604530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3547d0df720a7c041bf6534d9f050179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AreaAttack
+  attackCollider: {fileID: 3759458521551395255}
+  areaEffectPrefab1: {fileID: 8904114409888472623, guid: 14ac3d18de0db7243afe9d2c0ee4cabf, type: 3}
+  areaEffectPrefab2: {fileID: 720325515038598322, guid: 4cb26c2439a86c54bb8701483e5e2425, type: 3}
+  footPosition: {fileID: 710139605254413803}
 --- !u!1 &4794026709537744450
 GameObject:
   m_ObjectHideFlags: 0
@@ -1595,6 +1667,7 @@ GameObject:
   - component: {fileID: 3288099544611123409}
   - component: {fileID: 3002906336182703921}
   - component: {fileID: 3862146569620019789}
+  - component: {fileID: 6498623956869836691}
   m_Layer: 0
   m_Name: Enemy 1
   m_TagString: Untagged
@@ -1682,7 +1755,7 @@ MonoBehaviour:
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 0
-  attackRange: 5
+  attackRange: 4
   minRange: 2
   shortRange: 4
   attackAngle: 30
@@ -1746,6 +1819,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitboxController
   swordAttack: {fileID: 1944312902062985207}
+  areaAttack: {fileID: 5720333104873800256}
 --- !u!114 &3862146569620019789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1758,6 +1832,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f96cd75d856fbac4783566edaa7cf78d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitStoppen
+--- !u!114 &6498623956869836691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5205967574232431472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4427f8071f425b846b384f1c921a93c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimTrigger
+  areaAttack: {fileID: 5720333104873800256}
 --- !u!1 &5282540327790373397
 GameObject:
   m_ObjectHideFlags: 0

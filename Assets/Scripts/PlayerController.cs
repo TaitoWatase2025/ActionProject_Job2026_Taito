@@ -1,3 +1,5 @@
+using System.Xml.Serialization;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -31,6 +33,11 @@ public class PlayerController : MonoBehaviour
 
     private PlayerControls controls;
     private Vector3 previousPosition;
+
+    public GameObject StunParticlePrefab;
+    private bool isAnimationPaused = false; // アニメ停止中
+    private bool isStunFinished = false;    // スタン時間が終了したか
+    private bool isUnderStun = false;      // スタン中か
 
     // コンボ攻撃用
     private int comboStep = 0;
@@ -86,7 +93,19 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (GetComponent<PlayerStatus>().IsStunned()) return; // スタン中は操作不可
+        if (isUnderStun)
+        {
+            // StunTime が 0 になったか確認
+            if (playerStatus.StunTime <= 0f) isStunFinished = true;
+            // スタン時間が終わり & アニメ停止中なら再開
+            if (isAnimationPaused && isStunFinished)
+            {
+                anim.speed = 1f;       // アニメ再開
+                isAnimationPaused = false;
+                isUnderStun = false;   // 操作可能に
+            }
+            return; // 入力不可
+        }
 
         HandleGravity();// 重力処理
 
@@ -256,18 +275,49 @@ public class PlayerController : MonoBehaviour
     #region 被弾時
     public void OnHit()
     {
-        // 被弾時の処理（アニメーションイベントから呼び出し）
-        // アニメーション時間操作できない
+        isAnimationPaused = false; // アニメ停止中フラグ初期化
+        isUnderStun = false;
+        anim.speed = 1f; // 念のためアニメ速度を戻す
+
         state = PlayerState.Idle;
         comboStep = 0;
         anim.SetInteger("ComboStep", comboStep);
         anim.SetTrigger("AttackHit");
-        GetComponent<PlayerStatus>().StunTime = 1.5f; // スタン時間を設定
+        playerStatus.StunTime = 1.5f; // スタン時間を設定
+    }
+    public void OnAreaAttackHit()
+    {
+        StartStun(10.0f);
     }
     public void OnGuardHit()
     {
         // ガード被弾時の処理（アニメーションイベントから呼び出し）
         anim.SetTrigger("GuardHit");
+    }
+    public void OnAreaAttackGuardHit()
+    {
+        // ガード被弾時の処理（アニメーションイベントから呼び出し）
+        anim.SetTrigger("AreaAttackGuardHit");
+    }
+    public void OnStunAnimationEnd()
+    {
+        anim.speed = 0f;//イベントで停止
+        isAnimationPaused = true;
+    }
+    public void StartStun(float duration)
+    {
+        // PlayerStatus の StunTime をセット
+        playerStatus.StunTime = duration;
+        isAnimationPaused = false; // アニメ停止中フラグ初期化
+        isStunFinished = false;
+        isUnderStun = true;
+        
+
+        state = PlayerState.Idle;
+        comboStep = 0;
+        anim.SetInteger("ComboStep", comboStep);
+        anim.SetTrigger("AreaAttackHit");
+        anim.speed = 1f; // 再生開始
     }
     #endregion
 
