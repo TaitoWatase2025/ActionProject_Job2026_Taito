@@ -214,9 +214,9 @@ public class EnemyAI : MonoBehaviour
             }
         }
 
-        if (distance > attackRange &&
+        if (distance < attackRange &&
             angle < attackAngle &&
-            Time.time - lastAttackTime >= attackCooldown &&
+            Time.time + lastAttackTime <= attackCooldown &&
             lastAction != LastAction.Attack)
         {
             anim.SetTrigger("Attack");
