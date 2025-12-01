@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Xml.Serialization;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -34,10 +35,13 @@ public class PlayerController : MonoBehaviour
     private PlayerControls controls;
     private Vector3 previousPosition;
 
-    public GameObject StunParticlePrefab;
+    [SerializeField] public GameObject StunParticlePrefab;
+    [SerializeField] public Transform StunParticleSpawnPoint;
     private bool isAnimationPaused = false; // アニメ停止中
     private bool isStunFinished = false;    // スタン時間が終了したか
     private bool isUnderStun = false;      // スタン中か
+    private ParticleSystem currentStunParticle;
+    private Coroutine stunCoroutine;
 
     // コンボ攻撃用
     private int comboStep = 0;
@@ -275,8 +279,9 @@ public class PlayerController : MonoBehaviour
     #region 被弾時
     public void OnHit()
     {
+        StopCurrentStun(); 
+
         isAnimationPaused = false; // アニメ停止中フラグ初期化
-        isUnderStun = false;
         anim.speed = 1f; // 念のためアニメ速度を戻す
 
         state = PlayerState.Idle;
@@ -287,6 +292,7 @@ public class PlayerController : MonoBehaviour
     }
     public void OnAreaAttackHit()
     {
+        StopCurrentStun(); 
         StartStun(10.0f);
     }
     public void OnGuardHit()
@@ -306,18 +312,58 @@ public class PlayerController : MonoBehaviour
     }
     public void StartStun(float duration)
     {
+        StopCurrentStun(); // 既存のスタン処理を停止
+
         // PlayerStatus の StunTime をセット
         playerStatus.StunTime = duration;
         isAnimationPaused = false; // アニメ停止中フラグ初期化
         isStunFinished = false;
         isUnderStun = true;
-        
+
 
         state = PlayerState.Idle;
         comboStep = 0;
         anim.SetInteger("ComboStep", comboStep);
         anim.SetTrigger("AreaAttackHit");
+
+        StartCoroutine(PlayStunEffect(duration));
+
         anim.speed = 1f; // 再生開始
+    }
+    private IEnumerator PlayStunEffect(float duration)
+    {
+        // パーティクル生成・再生
+        GameObject particleObj = Instantiate
+            (this.StunParticlePrefab, StunParticleSpawnPoint.position, Quaternion.identity);
+            
+        particleObj.transform.SetParent(StunParticleSpawnPoint);// 親子関係を設定
+
+        currentStunParticle= particleObj.GetComponent<ParticleSystem>();
+        currentStunParticle.Play();
+        // StunTime待機
+        yield return new WaitForSeconds(duration);
+
+        // 停止・破棄
+        StopCurrentStun();
+        stunCoroutine = null;
+    }
+    private void StopCurrentStun()
+    {
+        if (currentStunParticle != null)
+        {
+            currentStunParticle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            Destroy(currentStunParticle.gameObject);
+            currentStunParticle = null;
+        }
+
+        if (stunCoroutine != null)
+        {
+            StopCoroutine(stunCoroutine);
+            stunCoroutine = null;
+        }
+
+        isUnderStun = false;
+        isStunFinished = true;
     }
     #endregion
 

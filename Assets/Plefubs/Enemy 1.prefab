@@ -1277,8 +1277,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1906642491730028752}
-  - component: {fileID: 3759458521551395255}
   - component: {fileID: 5720333104873800256}
+  - component: {fileID: 3775269139108605548}
   m_Layer: 0
   m_Name: AreaAttackHit
   m_TagString: Untagged
@@ -1295,13 +1295,29 @@ Transform:
   m_GameObject: {fileID: 4716328838709604530}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.40000004, z: 0}
-  m_LocalScale: {x: 6, y: 0.20000002, z: 6}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 6, y: 0, z: 6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6557672419960889376}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!64 &3759458521551395255
+--- !u!114 &5720333104873800256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4716328838709604530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3547d0df720a7c041bf6534d9f050179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AreaAttack
+  attackCollider: {fileID: 3775269139108605548}
+  areaEffectPrefab1: {fileID: 8904114409888472623, guid: 14ac3d18de0db7243afe9d2c0ee4cabf, type: 3}
+  areaEffectPrefab2: {fileID: 720325515038598322, guid: 4cb26c2439a86c54bb8701483e5e2425, type: 3}
+  footPosition: {fileID: 710139605254413803}
+--- !u!64 &3775269139108605548
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1323,22 +1339,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &5720333104873800256
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4716328838709604530}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3547d0df720a7c041bf6534d9f050179, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AreaAttack
-  attackCollider: {fileID: 3759458521551395255}
-  areaEffectPrefab1: {fileID: 8904114409888472623, guid: 14ac3d18de0db7243afe9d2c0ee4cabf, type: 3}
-  areaEffectPrefab2: {fileID: 720325515038598322, guid: 4cb26c2439a86c54bb8701483e5e2425, type: 3}
-  footPosition: {fileID: 710139605254413803}
 --- !u!1 &4794026709537744450
 GameObject:
   m_ObjectHideFlags: 0

@@ -61,7 +61,6 @@ public class AreaAttack : MonoBehaviour
         {
             ParticleSystem effect1 = Instantiate(areaEffectPrefab1, footPosition.position, Quaternion.identity);
             effect1.Play();
-            Destroy(effect1.gameObject, effect1.main.duration + effect1.main.startLifetime.constantMax);
         }
 
         // パーティクル2を生成して再生
@@ -69,7 +68,6 @@ public class AreaAttack : MonoBehaviour
         {
             ParticleSystem effect2 = Instantiate(areaEffectPrefab2, footPosition.position, Quaternion.identity);
             effect2.Play();
-            Destroy(effect2.gameObject, effect2.main.duration + effect2.main.startLifetime.constantMax);
         }
     }
 }
