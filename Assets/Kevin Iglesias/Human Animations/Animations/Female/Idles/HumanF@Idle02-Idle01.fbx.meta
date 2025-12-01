@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 3da359268264e0d4db38c1ce951c30ca
+guid: da2ed2e1aae1da34684fe894590efa54
 labels:
 - Animation
 ModelImporter:
@@ -974,4 +974,4 @@ AssetOrigin:
   packageName: Human Basic Motions FREE
   packageVersion: 2.4.1
   assetPath: Assets/Kevin Iglesias/Human Animations/Animations/Female/Idles/HumanF@Idle02-Idle01.fbx
-  uploadId: 762152
+  uploadId: 825236

@@ -186,7 +186,7 @@ public class EnemyAI : MonoBehaviour
 
         if ((float)Status.health / Status.maxHealth <= 0.8f &&
             distance < shortRange &&
-            //Random.value < 0.5f &&
+            Random.value < 0.5f &&
             lastAction != LastAction.AreaAttack)
         {
             anim.SetTrigger("AreaAttack");

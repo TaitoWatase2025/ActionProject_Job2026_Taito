@@ -1316,7 +1316,7 @@ MonoBehaviour:
   attackCollider: {fileID: 3775269139108605548}
   areaEffectPrefab1: {fileID: 8904114409888472623, guid: 14ac3d18de0db7243afe9d2c0ee4cabf, type: 3}
   areaEffectPrefab2: {fileID: 720325515038598322, guid: 4cb26c2439a86c54bb8701483e5e2425, type: 3}
-  footPosition: {fileID: 710139605254413803}
+  footPosition: {fileID: 6557672419960889376}
 --- !u!64 &3775269139108605548
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1668,7 +1668,7 @@ GameObject:
   - component: {fileID: 3002906336182703921}
   - component: {fileID: 3862146569620019789}
   - component: {fileID: 6498623956869836691}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Enemy 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2521,7 +2521,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SwordAttack
   attackCollider: {fileID: 3272593371760159711}
   bloodParticlePrefab: {fileID: 5651394410912378698, guid: 2b89bbddbf30bca4ab1f69266b9561f7, type: 3}
-  sparkParticlePrefab: {fileID: 970364279476991537, guid: aa77744fe3ed7b44f8dade75e39d969a, type: 3}
+  sparkParticlePrefab: {fileID: 496913248247719083, guid: 8196bd3a3eb2d51449ef9ff67ff7a12a, type: 3}
 --- !u!1 &7395133725872079546
 GameObject:
   m_ObjectHideFlags: 0

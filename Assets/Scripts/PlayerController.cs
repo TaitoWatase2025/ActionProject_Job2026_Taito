@@ -3,12 +3,17 @@ using System.Xml.Serialization;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
     public enum PlayerState { Idle, Walking, Running, Jumping, Attacking, Dodging, Die }
     public PlayerState state = PlayerState.Idle;
+
+    [Header("カメラ")]
+    public LockOnCamera lockoncamera;
+    public PlayerCamera freecamera;
 
     [Header("移動設定")]
     public float moveSpeed = 5f;
@@ -59,6 +64,8 @@ public class PlayerController : MonoBehaviour
     private float coyoteTimeCounter;
     private float jumpBufferCounter;
 
+    private bool canContorol = false;
+
     public bool isGuarding = false;
     private void Awake()
     {
@@ -67,6 +74,9 @@ public class PlayerController : MonoBehaviour
 
         playerStatus = GetComponent<PlayerStatus>();
         if (playerStatus != null) playerStatus.Ondeath += OnDeath;
+
+        anim.SetTrigger("StandUp");// 初期状態をIdleに設定
+        canContorol = false;
 
         controls = new PlayerControls();
 
@@ -89,14 +99,29 @@ public class PlayerController : MonoBehaviour
         //ガード(isGuardingで判定)
         controls.Player.Guard.performed += ctx => isGuarding = true;
         controls.Player.Guard.canceled += ctx => isGuarding = false;
+
+        //カメラロックオン(切り替え)
+        controls.Player.Lock.performed += ctx => ToggleLockOn();
+
+        // 左右ターゲット切替
+        controls.Player.NextTarget.performed += ctx => SwitchTarget(1);
+        controls.Player.PrevTarget.performed += ctx => SwitchTarget(-1);
+
+
     }
 
 
-    private void OnEnable() => controls.Player.Enable();
+private void OnEnable() => controls.Player.Enable();
     private void OnDisable() => controls.Player.Disable();
 
     private void Update()
     {
+        if (!canContorol)
+        {
+            AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
+            if ( stateInfo.normalizedTime >= 0.8f)canContorol = true;// 起き上がりアニメ終了で操作可能に
+            else return;
+        }
         if (isUnderStun)
         {
             // StunTime が 0 になったか確認
@@ -127,6 +152,29 @@ public class PlayerController : MonoBehaviour
 
         UpdateAnimator();
     }
+    #region LockOn操作
+    private void ToggleLockOn()
+    {
+        if (lockoncamera.isLockOn)
+        {
+            lockoncamera.isLockOn = false;
+            lockoncamera.gameObject.SetActive(false);
+            freecamera.gameObject.SetActive(true);
+        }
+        else
+        {
+            lockoncamera.isLockOn = true;
+            lockoncamera.gameObject.SetActive(true);
+            freecamera.gameObject.SetActive(false);
+        }
+    }
+
+    private void SwitchTarget(int dir)
+    {
+        if (!lockoncamera.isLockOn) return;
+        lockoncamera.SwitchTarget(dir);
+    }
+    #endregion
 
     #region 移動
     private void HandleMove()
@@ -279,7 +327,7 @@ public class PlayerController : MonoBehaviour
     #region 被弾時
     public void OnHit()
     {
-        StopCurrentStun(); 
+        StopCurrentStun();
 
         isAnimationPaused = false; // アニメ停止中フラグ初期化
         anim.speed = 1f; // 念のためアニメ速度を戻す
@@ -292,7 +340,7 @@ public class PlayerController : MonoBehaviour
     }
     public void OnAreaAttackHit()
     {
-        StopCurrentStun(); 
+        StopCurrentStun();
         StartStun(10.0f);
     }
     public void OnGuardHit()
@@ -335,10 +383,10 @@ public class PlayerController : MonoBehaviour
         // パーティクル生成・再生
         GameObject particleObj = Instantiate
             (this.StunParticlePrefab, StunParticleSpawnPoint.position, Quaternion.identity);
-            
+
         particleObj.transform.SetParent(StunParticleSpawnPoint);// 親子関係を設定
 
-        currentStunParticle= particleObj.GetComponent<ParticleSystem>();
+        currentStunParticle = particleObj.GetComponent<ParticleSystem>();
         currentStunParticle.Play();
         // StunTime待機
         yield return new WaitForSeconds(duration);

@@ -1094,6 +1094,14 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: fc391ce2-9dfb-4936-8671-06de8ce83d04
     m_ActionName: 'Player/Dodge[/Keyboard/leftCtrl]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 9fffaed7-a8a2-44d9-b366-91bdab250cc3
+    m_ActionName: 'Player/Guard[/Mouse/rightButton]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 929efcad-291e-4222-baf9-b1f90ef8b874
+    m_ActionName: 'Player/Rock[/Keyboard/tab]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -1148,6 +1156,8 @@ MonoBehaviour:
   playerTransform: {fileID: 197941885819539104}
   anim: {fileID: 148126502097942101}
   deathManager: {fileID: 0}
+  StunParticlePrefab: {fileID: 7131401307255788800, guid: 328491e735bde554bbccc797d48455f6, type: 3}
+  StunParticleSpawnPoint: {fileID: 1032742763183574985}
   isGuarding: 0
 --- !u!54 &6527924462633707161
 Rigidbody:
@@ -1211,8 +1221,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29400be72d57fe42a99272639b1b806, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStatus
-  maxHealth: 100
-  attackPower: 50
+  maxHealth: 1000
+  attackPower: 10
   health: 0
   StunTime: 0
 --- !u!114 &4936889489015006599
@@ -1228,6 +1238,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
   swordAttack: {fileID: 1323116020233422891}
+  areaAttack: {fileID: 0}
 --- !u!114 &8127692197711656511
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -147,9 +147,27 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Rock"",
+                    ""name"": ""Lock"",
                     ""type"": ""Button"",
                     ""id"": ""929efcad-291e-4222-baf9-b1f90ef8b874"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""NextTarget"",
+                    ""type"": ""Button"",
+                    ""id"": ""e3fa264c-df40-43a5-a8c2-bfd381674a8f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PrevTarget"",
+                    ""type"": ""Button"",
+                    ""id"": ""a3e9418c-31b7-4e63-8697-2e1543e33b54"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -274,7 +292,29 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Rock"",
+                    ""action"": ""Lock"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ba2370e6-a707-40ed-8c43-ff04d020dc9d"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NextTarget"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ea4b69dc-82bf-4912-9f7e-d4e15c4cba62"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PrevTarget"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -291,7 +331,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Dodge = m_Player.FindAction("Dodge", throwIfNotFound: true);
         m_Player_Guard = m_Player.FindAction("Guard", throwIfNotFound: true);
-        m_Player_Rock = m_Player.FindAction("Rock", throwIfNotFound: true);
+        m_Player_Lock = m_Player.FindAction("Lock", throwIfNotFound: true);
+        m_Player_NextTarget = m_Player.FindAction("NextTarget", throwIfNotFound: true);
+        m_Player_PrevTarget = m_Player.FindAction("PrevTarget", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
@@ -378,7 +420,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_Dodge;
     private readonly InputAction m_Player_Guard;
-    private readonly InputAction m_Player_Rock;
+    private readonly InputAction m_Player_Lock;
+    private readonly InputAction m_Player_NextTarget;
+    private readonly InputAction m_Player_PrevTarget;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -415,9 +459,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Guard => m_Wrapper.m_Player_Guard;
         /// <summary>
-        /// Provides access to the underlying input action "Player/Rock".
+        /// Provides access to the underlying input action "Player/Lock".
         /// </summary>
-        public InputAction @Rock => m_Wrapper.m_Player_Rock;
+        public InputAction @Lock => m_Wrapper.m_Player_Lock;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/NextTarget".
+        /// </summary>
+        public InputAction @NextTarget => m_Wrapper.m_Player_NextTarget;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/PrevTarget".
+        /// </summary>
+        public InputAction @PrevTarget => m_Wrapper.m_Player_PrevTarget;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -462,9 +514,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Guard.started += instance.OnGuard;
             @Guard.performed += instance.OnGuard;
             @Guard.canceled += instance.OnGuard;
-            @Rock.started += instance.OnRock;
-            @Rock.performed += instance.OnRock;
-            @Rock.canceled += instance.OnRock;
+            @Lock.started += instance.OnLock;
+            @Lock.performed += instance.OnLock;
+            @Lock.canceled += instance.OnLock;
+            @NextTarget.started += instance.OnNextTarget;
+            @NextTarget.performed += instance.OnNextTarget;
+            @NextTarget.canceled += instance.OnNextTarget;
+            @PrevTarget.started += instance.OnPrevTarget;
+            @PrevTarget.performed += instance.OnPrevTarget;
+            @PrevTarget.canceled += instance.OnPrevTarget;
         }
 
         /// <summary>
@@ -494,9 +552,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Guard.started -= instance.OnGuard;
             @Guard.performed -= instance.OnGuard;
             @Guard.canceled -= instance.OnGuard;
-            @Rock.started -= instance.OnRock;
-            @Rock.performed -= instance.OnRock;
-            @Rock.canceled -= instance.OnRock;
+            @Lock.started -= instance.OnLock;
+            @Lock.performed -= instance.OnLock;
+            @Lock.canceled -= instance.OnLock;
+            @NextTarget.started -= instance.OnNextTarget;
+            @NextTarget.performed -= instance.OnNextTarget;
+            @NextTarget.canceled -= instance.OnNextTarget;
+            @PrevTarget.started -= instance.OnPrevTarget;
+            @PrevTarget.performed -= instance.OnPrevTarget;
+            @PrevTarget.canceled -= instance.OnPrevTarget;
         }
 
         /// <summary>
@@ -580,11 +644,25 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnGuard(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Rock" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Lock" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnRock(InputAction.CallbackContext context);
+        void OnLock(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "NextTarget" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnNextTarget(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "PrevTarget" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPrevTarget(InputAction.CallbackContext context);
     }
 }
