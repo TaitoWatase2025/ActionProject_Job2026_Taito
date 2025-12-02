@@ -50,7 +50,6 @@ public class LockOnCamera : MonoBehaviour
                 best = e;
             }
         }
-
         if (best != null) currentTarget = best;
     }
 

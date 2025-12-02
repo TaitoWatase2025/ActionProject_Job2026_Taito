@@ -1765,7 +1765,7 @@ MonoBehaviour:
   gravity: 9
   groundLayer:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 17
   groundCheckDistance: 0.1
   LandingDelay: 0.5
 --- !u!136 &8309286582281549286

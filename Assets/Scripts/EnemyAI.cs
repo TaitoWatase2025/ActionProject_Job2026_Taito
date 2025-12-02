@@ -217,7 +217,6 @@ public class EnemyAI : MonoBehaviour
             Random.value < 0.5f &&
             lastAction != LastAction.AreaAttack)
         {
-            //if (Random.value < 0.5f)
             anim.speed = Random.Range(0.5f, 2f);
             anim.SetTrigger("AreaAttack");
             lastAction = LastAction.AreaAttack;
@@ -228,7 +227,7 @@ public class EnemyAI : MonoBehaviour
         {
             if (Random.value < 0.5f && lastAction != LastAction.BackJump && Time.time - lastAttackTime >= attackCooldown)
             {
-                anim.speed = Random.Range(0.5f, 2f);
+                anim.speed = 1f;
                 anim.SetTrigger("BackJump");
                 lastAction = LastAction.BackJump;
                 lastAttackTime = Time.time;
@@ -237,7 +236,7 @@ public class EnemyAI : MonoBehaviour
             }
             else if (lastAction != LastAction.ShortAttack && angle < attackAngle && Time.time - lastAttackTime >= attackCooldown)
             {
-                anim.speed = Random.Range(0.5f, 2f);
+                anim.speed = Random.Range(1f, 2f);
                 anim.SetTrigger("ShortAttack");
                 lastAction = LastAction.ShortAttack;
                 lastAttackTime = Time.time;
