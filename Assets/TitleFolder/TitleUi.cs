@@ -62,6 +62,8 @@ public class TitleUI : MonoBehaviour
                 TitleAudioManager.Instance.bgmSource.volume = v;
                 TitleAudioManager.Instance.bgmVolume = v;
 
+                PlayerPrefs.SetFloat("BGM_VOLUME", v);
+
                 // カチカチ音を再生
                 TitleAudioManager.Instance.PlayUISE(sliderSE);
             });
