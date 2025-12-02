@@ -16,6 +16,10 @@ public class EnemyAI : MonoBehaviour
     public float viewAngle = 360f;
     public LayerMask obstacleLayer;
 
+    [Header("à⁄ìÆä÷òA")]
+    public float LongRange = 10f;
+    public float ShortRange = 5f;
+
     [Header("çUåÇ")]
     public float attackRange = 5f;
     public float minRange = 1.5f;
@@ -166,9 +170,31 @@ public class EnemyAI : MonoBehaviour
     {
         if (!agent.enabled) return;
 
-        agent.destination = player.position;
+        var distance = Vector3.Distance(transform.position, player.position);
+
         if (IsPlayerInAttackRange())
+        {
             state = EnemyState.Attack;
+            return;
+        }
+        agent.isStopped = false;
+        agent.destination = player.position;
+
+        //ãóó£Ç…âûÇ∂Çƒë¨ìxïœâª
+        if (distance > LongRange)
+        {
+            agent.speed = 2f; // ë¨Ç≠à⁄ìÆ
+        }
+        else if (distance <= LongRange && distance > ShortRange)
+        {
+            agent.speed = 5f; // ïÅí ÇÃë¨ìxÇ≈à⁄ìÆ
+        }
+        else if (distance <= ShortRange)
+        {
+            agent.speed = 2f; // Ç‰Ç¡Ç≠ÇËà⁄ìÆ
+        }
+
+
     }
     #endregion
 
@@ -180,15 +206,19 @@ public class EnemyAI : MonoBehaviour
         agent.isStopped = isAttacking;
 
         float distance = Vector3.Distance(transform.position, player.position);
-        Vector3 dirToPlayer = (player.position - transform.position).normalized;
+        Vector3 dirToPlayer = player.position - transform.position;
+        dirToPlayer.y = 0;
+        dirToPlayer.Normalize();
         float angle = Vector3.Angle(transform.forward, dirToPlayer);
 
 
-        if ((float)Status.health / Status.maxHealth <= 0.8f &&
+        if ((float)Status.health / Status.maxHealth <= 0.5f &&
             distance < shortRange &&
             Random.value < 0.5f &&
             lastAction != LastAction.AreaAttack)
         {
+            //if (Random.value < 0.5f)
+            anim.speed = Random.Range(0.5f, 2f);
             anim.SetTrigger("AreaAttack");
             lastAction = LastAction.AreaAttack;
             isAttacking = true;
@@ -198,6 +228,7 @@ public class EnemyAI : MonoBehaviour
         {
             if (Random.value < 0.5f && lastAction != LastAction.BackJump && Time.time - lastAttackTime >= attackCooldown)
             {
+                anim.speed = Random.Range(0.5f, 2f);
                 anim.SetTrigger("BackJump");
                 lastAction = LastAction.BackJump;
                 lastAttackTime = Time.time;
@@ -206,6 +237,7 @@ public class EnemyAI : MonoBehaviour
             }
             else if (lastAction != LastAction.ShortAttack && angle < attackAngle && Time.time - lastAttackTime >= attackCooldown)
             {
+                anim.speed = Random.Range(0.5f, 2f);
                 anim.SetTrigger("ShortAttack");
                 lastAction = LastAction.ShortAttack;
                 lastAttackTime = Time.time;
@@ -215,19 +247,21 @@ public class EnemyAI : MonoBehaviour
         }
 
         if (distance < attackRange &&
+            distance > minRange &&
             angle < attackAngle &&
             Time.time - lastAttackTime >= attackCooldown &&
             lastAction != LastAction.Attack)
         {
+            anim.speed = Random.Range(0.5f, 2f);
             anim.SetTrigger("Attack");
             lastAction = LastAction.Attack;
             lastAttackTime = Time.time;
             isAttacking = true;
-
         }
 
         if (!IsPlayerInAttackRange() && !isAttacking)
         {
+            anim.speed = 1f;
             state = EnemyState.Chase;
             agent.isStopped = false;
         }
@@ -241,25 +275,24 @@ public class EnemyAI : MonoBehaviour
         if (distance > attackRange) return false;
 
         // ê≥ñ îªíË
-        Vector3 dirToPlayer = (player.position - transform.position).normalized;
+        Vector3 dirToPlayer = player.position - transform.position;
+        dirToPlayer.y = 0;
+        dirToPlayer.Normalize();
         float angle = Vector3.Angle(transform.forward, dirToPlayer);
         return angle <= attackAngle;
     }
 
     public void OnAttackEnd()
     {
-        if (lastAction == LastAction.BackJump) return;
         isAttacking = false;
+
         if (state == EnemyState.Attack)
         {
             state = EnemyState.Chase;
             agent.isStopped = false;
         }
     }
-
-    
     #endregion
-
     #region éÄñSîªíË
     private void HandleDeath()
     {
@@ -268,7 +301,6 @@ public class EnemyAI : MonoBehaviour
         anim.SetTrigger("Die");
         StartCoroutine(RemoveAfterDelay(3f));
     }
-
     private IEnumerator RemoveAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);

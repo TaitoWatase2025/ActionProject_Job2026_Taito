@@ -1102,6 +1102,14 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 929efcad-291e-4222-baf9-b1f90ef8b874
     m_ActionName: 'Player/Rock[/Keyboard/tab]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e3fa264c-df40-43a5-a8c2-bfd381674a8f
+    m_ActionName: 'Player/NextTarget[/Keyboard/e]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a3e9418c-31b7-4e63-8697-2e1543e33b54
+    m_ActionName: 'Player/PrevTarget[/Keyboard/e]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -1145,6 +1153,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   state: 0
+  lockoncamera: {fileID: 0}
+  freecamera: {fileID: 0}
   moveSpeed: 5
   sprintMultiplier: 2
   jumpForce: 3
@@ -1221,7 +1231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29400be72d57fe42a99272639b1b806, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStatus
-  maxHealth: 1000
+  maxHealth: 250
   attackPower: 10
   health: 0
   StunTime: 0
