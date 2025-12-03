@@ -233,7 +233,7 @@ public class EnemyAI : MonoBehaviour
         }
         if (distance < minRange)
         {
-            if (Random.value < 0.5f && lastAction != LastAction.BackJump && Time.time - lastAttackTime >= attackCooldown)
+            if (Random.value < 0.5f)
             {
                 anim.speed = 1f;
                 anim.SetTrigger("BackJump");
@@ -266,7 +266,7 @@ public class EnemyAI : MonoBehaviour
             isAttacking = true;
         }
 
-        if (!IsPlayerInAttackRange() && !isAttacking)
+        if (!IsPlayerInAttackRange() || !isAttacking)
         {
             anim.speed = 1f;
             state = EnemyState.Chase;
