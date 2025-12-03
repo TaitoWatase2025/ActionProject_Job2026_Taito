@@ -14,19 +14,18 @@ public class GameAudioManager : MonoBehaviour
     public float sfxVolume = 1f;
 
     [Header("Footstep Clips")]
-    public AudioClip playerWalkFootstep;
-    public AudioClip playerRunFootstep;
-    public AudioClip enemyWalkFootstep;
-    public AudioClip enemyRunFootstep;
+    public AudioClip Footstep;
 
     [Header("Landing Clips")]
     public AudioClip playerLand;
     public AudioClip enemyLand;
-
+    
     [Header("Attack Clips")]
+    public AudioClip Attack;
     public AudioClip weaponHit;
-    public AudioClip weaponMiss;
     public AudioClip guardHit;
+    public AudioClip AreaAttack;
+    public AudioClip dieSE;
 
     private void Awake()
     {
@@ -35,7 +34,7 @@ public class GameAudioManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
 
-            bgmVolume= PlayerPrefs.GetFloat("BGM_VOLUME", 0.5f);// ëOâÒÇÃê›íËÇì«Ç›çûÇ›
+            bgmVolume = PlayerPrefs.GetFloat("BGM_VOLUME", 0.5f);// ëOâÒÇÃê›íËÇì«Ç›çûÇ›
         }
         else
         {
@@ -104,15 +103,9 @@ public class GameAudioManager : MonoBehaviour
     }
     #endregion
     #region Helper Methods
-    public void PlayFootstep(bool isPlayer, bool isRunning, Vector3 position)
+    public void PlayFootstep(Vector3 position)
     {
-        AudioClip clip = null;
-        if (isPlayer)
-            clip = isRunning ? playerRunFootstep : playerWalkFootstep;
-        else
-            clip = isRunning ? enemyRunFootstep : enemyWalkFootstep;
-
-        PlaySFX(clip, position);
+        PlaySFX(Footstep, position);
     }
 
     public void PlayLanding(bool isPlayer, Vector3 position)
@@ -121,14 +114,26 @@ public class GameAudioManager : MonoBehaviour
         PlaySFX(clip, position);
     }
 
-    public void PlayAttackHit(bool hit, Vector3 position)
+    public void PlayAttackHit (Vector3 position)
     {
-        PlaySFX(hit ? weaponHit : weaponMiss, position);
+        PlaySFX( weaponHit , position);
     }
 
     public void PlayGuardHit(Vector3 position)
     {
         PlaySFX(guardHit, position);
+    }
+    public void PlayAreaAttack(Vector3 position)
+    {
+        PlaySFX(AreaAttack, position);
+    }
+    public void AttackSE(Vector3 position)
+    {
+        PlaySFX(Attack, position);
+    }
+    public  void PlayOnDie(Vector3 position)
+    {
+        PlaySFX(dieSE, position);
     }
 }
 #endregion

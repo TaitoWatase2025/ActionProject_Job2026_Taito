@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+using UnityEngine.UIElements.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
@@ -111,7 +112,7 @@ public class PlayerController : MonoBehaviour
     }
 
 
-private void OnEnable() => controls.Player.Enable();
+    private void OnEnable() => controls.Player.Enable();
     private void OnDisable() => controls.Player.Disable();
 
     private void Update()
@@ -119,7 +120,7 @@ private void OnEnable() => controls.Player.Enable();
         if (!canContorol)
         {
             AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
-            if ( stateInfo.normalizedTime >= 0.8f)canContorol = true;// 起き上がりアニメ終了で操作可能に
+            if (stateInfo.normalizedTime >= 0.8f) canContorol = true;// 起き上がりアニメ終了で操作可能に
             else return;
         }
         if (isUnderStun)
@@ -204,6 +205,10 @@ private void OnEnable() => controls.Player.Enable();
         if (state != PlayerState.Jumping && state != PlayerState.Dodging && state != PlayerState.Attacking)
             state = move.sqrMagnitude > 0.01f ? PlayerState.Walking : PlayerState.Idle;
     }
+    public void PlayStepSE()
+    {
+        GameAudioManager.Instance.PlayFootstep(transform.position);
+    }
     #endregion
 
     #region ジャンプ
@@ -231,6 +236,10 @@ private void OnEnable() => controls.Player.Enable();
             jumpBufferCounter -= Time.deltaTime;
             jumpBufferCounter = Mathf.Max(jumpBufferCounter, 0f);
         }
+    }
+    public void OnLandSE()
+    {
+        GameAudioManager.Instance.PlayLanding(true, transform.position);
     }
     #endregion
 
@@ -281,6 +290,10 @@ private void OnEnable() => controls.Player.Enable();
             state = PlayerState.Idle;
             anim.SetInteger("ComboStep", comboStep);
         }
+    }
+    public void PlayAttackSE()
+    {
+        GameAudioManager.Instance.AttackSE(transform.position);
     }
     #endregion
 
@@ -340,7 +353,7 @@ private void OnEnable() => controls.Player.Enable();
     }
     public void OnAreaAttackHit()
     {
-        StopCurrentStun();
+        if (isUnderStun) {playerStatus.StunTime += 10f;return; }// スタン中なら時間延長のみ
         StartStun(10.0f);
     }
     public void OnGuardHit()
@@ -437,9 +450,12 @@ private void OnEnable() => controls.Player.Enable();
         var colliders = GetComponentsInChildren<Collider>();
         foreach (var col in colliders) col.enabled = false; // コライダー無効化
 
-        // Replace the deprecated FindObjectOfType with FindFirstObjectByType
-        FindFirstObjectByType<DeathManager>().HandlePlayerDeath();
-
+        FindFirstObjectByType<DeathManager>().HandlePlayerDeath();// 死亡処理開始
+        GameAudioManager.Instance.StopBGM(8f);
+    }
+    public void PlayOnDie()
+    {
+        GameAudioManager.Instance.PlayOnDie(transform.position);
     }
     #endregion
 }

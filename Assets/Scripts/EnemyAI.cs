@@ -19,6 +19,7 @@ public class EnemyAI : MonoBehaviour
     [Header("ˆÚ“®ŠÖ˜A")]
     public float LongRange = 10f;
     public float ShortRange = 5f;
+    public bool EnemyRunning = false;
 
     [Header("UŒ‚")]
     public float attackRange = 5f;
@@ -152,6 +153,9 @@ public class EnemyAI : MonoBehaviour
                 {
                     anim.SetBool("IsFalling", false);
                     anim.SetTrigger("Land");
+                    var enemyTransform = this.transform;
+                    Vector3 enemyLandingPos = enemyTransform.position;
+                    GameAudioManager.Instance.PlayLanding(false, enemyLandingPos);
 
                     if (!agent.enabled) agent.enabled = true;
                     agent.isStopped = true;
@@ -183,7 +187,7 @@ public class EnemyAI : MonoBehaviour
         //‹——£‚É‰ž‚¶‚Ä‘¬“x•Ï‰»
         if (distance > LongRange)
         {
-            agent.speed = 2f; // ‘¬‚­ˆÚ“®
+            agent.speed = 2f; // ‚ä‚Á‚­‚èˆÚ“®
         }
         else if (distance <= LongRange && distance > ShortRange)
         {
@@ -195,6 +199,10 @@ public class EnemyAI : MonoBehaviour
         }
 
 
+    }
+    public void PlayFootStep()
+    {
+        GameAudioManager.Instance.PlayFootstep(transform.position);
     }
     #endregion
 
@@ -291,6 +299,19 @@ public class EnemyAI : MonoBehaviour
             agent.isStopped = false;
         }
     }
+    public void OnBackJumpEnd()
+    {
+        GameAudioManager.Instance.PlayLanding(false, transform.position);
+    }
+    public void PlayAttackSE()
+    {
+        GameAudioManager.Instance.AttackSE(transform.position);
+    }
+    public void PlayAreaAttackSE()
+    {
+        GameAudioManager.Instance.PlayAreaAttack(transform.position);
+    }
+   
     #endregion
     #region Ž€–S”»’è
     private void HandleDeath()
@@ -304,6 +325,10 @@ public class EnemyAI : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         Destroy(gameObject);
+    }
+    public void PlayDieSE()
+    {
+        GameAudioManager.Instance.PlayOnDie(transform.position);
     }
     #endregion
 }

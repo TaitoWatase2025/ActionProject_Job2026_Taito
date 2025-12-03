@@ -58,6 +58,7 @@ public class SwordAttack : MonoBehaviour
         {
             Vector3 hitpoint = other.ClosestPoint(transform.position);
             SpawnBlood(hitpoint);
+            GameAudioManager.Instance.PlayAttackHit(hitpoint);
 
             HitStop attackerHitStop = playerStatus.GetComponent<HitStop>();
             HitStop enemyHitStop = targetEnemy.GetComponent<HitStop>();
@@ -86,6 +87,7 @@ public class SwordAttack : MonoBehaviour
                 playerController?.OnGuardHit();
 
                 SpawnSpark(hitPoint);
+                GameAudioManager.Instance.PlayGuardHit(hitPoint);// ガードヒット音を再生
                 Animator enemyAnim = enemyStatus.GetComponent<Animator>();
                 if (enemyAnim != null)
                 {
@@ -97,6 +99,7 @@ public class SwordAttack : MonoBehaviour
             }
             Vector3 hitpoint = other.ClosestPoint(transform.position);
             SpawnBlood(hitpoint);
+            GameAudioManager.Instance.PlayAttackHit(hitpoint);// プレイヤーヒット音を再生
 
             // 敵の攻撃でプレイヤーにダメージ
             targetPlayer.TakeDamage(enemyStatus.AttackPower);

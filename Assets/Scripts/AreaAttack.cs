@@ -38,11 +38,11 @@ public class AreaAttack : MonoBehaviour
             {
                 if (playerController != null && playerController.isGuarding)
                 {
-                    targetPlayer.TakeDamage(enemyStatus.AttackPower * 0.5f);
+                    targetPlayer.TakeDamage(enemyStatus.AttackPower);
                     playerController?.OnAreaAttackGuardHit();
                     return;
                 }
-                targetPlayer.TakeDamage(enemyStatus.AttackPower);
+                targetPlayer.TakeDamage(enemyStatus.AttackPower * 1.2f);
                 playerController?.OnAreaAttackHit();
                 Debug.Log("areaAttack Hit Player!");
             }
