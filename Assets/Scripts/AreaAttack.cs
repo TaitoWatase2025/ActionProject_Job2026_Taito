@@ -4,7 +4,6 @@ public class AreaAttack : MonoBehaviour
 {
     public Collider attackCollider; // 攻撃判定用
     private EnemyStatus enemyStatus;
-    private PlayerStatus playerStatus;
     public ParticleSystem areaEffectPrefab1; // エリア攻撃エフェクト用
     public ParticleSystem areaEffectPrefab2; // エリア攻撃エフェクト用
     public Transform footPosition; // エフェクト生成位置
@@ -15,7 +14,6 @@ public class AreaAttack : MonoBehaviour
             attackCollider.enabled = false;
 
         // 攻撃者のステータスを取得（親にある想定）
-        playerStatus = GetComponentInParent<PlayerStatus>();
         enemyStatus = GetComponentInParent<EnemyStatus>();
     }
     public void EnableCollider()

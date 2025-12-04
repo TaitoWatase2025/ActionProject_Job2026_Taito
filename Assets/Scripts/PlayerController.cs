@@ -68,6 +68,8 @@ public class PlayerController : MonoBehaviour
     private bool canContorol = false;
 
     public bool isGuarding = false;
+
+    private bool isPushing = false;
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
@@ -118,10 +120,19 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         if (state == PlayerState.Die) return;
+        if (isPushing)
+        {
+            // controller.velocity.magnitudeで移動速度取得
+            if (controller.velocity.magnitude < 0.5f)
+            {
+                isPushing = false;  // 速度低下で終了
+            }
+            return;
+        }
         if (!canContorol)
         {
             AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
-            if (stateInfo.normalizedTime >= 0.8f) canContorol = true;// 起き上がりアニメ終了で操作可能に
+            if (stateInfo.normalizedTime >= 0.8f) canContorol = true;
             else return;
         }
         if (isUnderStun)
@@ -181,7 +192,12 @@ public class PlayerController : MonoBehaviour
     #region 移動
     private void HandleMove()
     {
-        if (state == PlayerState.Attacking || isDodging || state == PlayerState.Dodging) return;
+        if (state == PlayerState.Attacking ||
+            state == PlayerState.Dodging ||
+            state == PlayerState.Die ||
+            isDodging ||
+            isPushing)
+            return;
         if (cameraTransform == null) return;
 
         Vector3 forward = cameraTransform.forward;// カメラの向きから前方向を取得
@@ -287,6 +303,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            if (state == PlayerState.Die) return;
             comboStep = 0;
             state = PlayerState.Idle;
             anim.SetInteger("ComboStep", comboStep);
@@ -342,10 +359,9 @@ public class PlayerController : MonoBehaviour
     public void OnHit()
     {
         StopCurrentStun();
-
         isAnimationPaused = false; // アニメ停止中フラグ初期化
         anim.speed = 1f; // 念のためアニメ速度を戻す
-
+        if (state == PlayerState.Die) return;// 死亡中は無効化
         state = PlayerState.Idle;
         comboStep = 0;
         anim.SetInteger("ComboStep", comboStep);
@@ -354,8 +370,13 @@ public class PlayerController : MonoBehaviour
     }
     public void OnAreaAttackHit()
     {
-        if (isUnderStun) {playerStatus.StunTime += 10f;return; }// スタン中なら時間延長のみ
+        if (isUnderStun) { playerStatus.StunTime += 10f; return; }// スタン中なら時間延長のみ
         StartStun(10.0f);
+    }
+    public void OnPushAttackHit(Transform enemyTransform)
+    {
+        if (isUnderStun) playerStatus.StunTime = 0f; // スタン中なら解除
+        StartPush(enemyTransform); // Enemyの位置を渡す
     }
     public void OnGuardHit()
     {
@@ -379,9 +400,8 @@ public class PlayerController : MonoBehaviour
         // PlayerStatus の StunTime をセット
         playerStatus.StunTime = duration;
         isAnimationPaused = false; // アニメ停止中フラグ初期化
-        isStunFinished = false;
-        isUnderStun = true;
-
+        isStunFinished = false;// スタン終了フラグ初期化
+        isUnderStun = true;// スタン中フラグセット
 
         state = PlayerState.Idle;
         comboStep = 0;
@@ -391,6 +411,44 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(PlayStunEffect(duration));
 
         anim.speed = 1f; // 再生開始
+    }
+    public void StartPush(Transform enemyTransform)
+    {
+        if (isUnderStun)
+        {
+            StopCurrentStun(); // 既存のスタン処理を停止
+            isAnimationPaused = false; // アニメ停止中フラグ初期化
+            isStunFinished = false; // スタン終了フラグ初期化
+            isUnderStun = true; // スタン中フラグセット
+        }
+
+        state = PlayerState.Idle;
+        comboStep = 0;
+        anim.SetInteger("ComboStep", comboStep);
+        anim.SetTrigger("PushAttackHit");
+
+        // Enemyの位置から反対方向を計算
+        Vector3 pushDirection = (playerTransform.position - enemyTransform.position).normalized;
+
+        // Playerを反対方向に飛ばす
+        float pushForce = 15f; // 飛ばす力の大きさ
+                                // コルーチンで滑らかに押し出し開始
+        StartCoroutine(PushCoroutine(pushDirection, pushForce, 0.6f));
+    }
+    private IEnumerator PushCoroutine(Vector3 direction, float force, float duration)
+    {
+        float timer = 0f;
+        verticalVelocity = 0f;  // 重力リセット
+
+        while (timer < duration)
+        {
+            // 徐々に減衰する滑らかな押し出し
+            float currentForce = force * (1f - timer / duration);
+            controller.Move(direction * currentForce * Time.deltaTime);
+
+            timer += Time.deltaTime;
+            yield return null;  // 次のフレームへ
+        }
     }
     private IEnumerator PlayStunEffect(float duration)
     {

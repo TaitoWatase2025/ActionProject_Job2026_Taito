@@ -4,6 +4,7 @@ public class HitboxController : MonoBehaviour
 {
     public SwordAttack swordAttack; // Inspector Ç≈ê›íË
     public AreaAttack areaAttack; // Inspector Ç≈ê›íË
+    public PushAttack pushAttack; // Inspector Ç≈ê›íË
 
     public void EnableSwordCollider()
     {
@@ -24,5 +25,15 @@ public class HitboxController : MonoBehaviour
     {
         if (areaAttack != null)
             areaAttack.DisableCollider();
+    }
+    public void EnablePushCollider()
+    {
+        if (pushAttack != null)
+            pushAttack.EnableCollider();
+    }
+    public void DisablePushCollider()
+    {
+        if (pushAttack != null)
+            pushAttack.DisableCollider();
     }
 }

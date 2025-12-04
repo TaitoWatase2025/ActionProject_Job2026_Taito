@@ -318,6 +318,75 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2805215466139110401}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1254858204217443832
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5728179685569877912}
+  - component: {fileID: 5946117194370494348}
+  - component: {fileID: 721869511484277184}
+  m_Layer: 0
+  m_Name: PushAttackHit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5728179685569877912
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254858204217443832}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6557672419960889376}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &5946117194370494348
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254858204217443832}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 3
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &721869511484277184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254858204217443832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6084192e0d20fc140acad220c6f82145, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PushAttack
+  attackCollider: {fileID: 5946117194370494348}
+  areaEffectPrefab: {fileID: 1215030772492927087, guid: a44c5f708fc6d3848b3572a52f73b7ce, type: 3}
+  footPosition: {fileID: 243421778119922629}
 --- !u!1 &1631916304375384746
 GameObject:
   m_ObjectHideFlags: 0
@@ -506,6 +575,7 @@ Transform:
   m_Children:
   - {fileID: 8253591703142711229}
   - {fileID: 1906642491730028752}
+  - {fileID: 5728179685569877912}
   m_Father: {fileID: 243421778119922629}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2619836062728420602
@@ -1277,8 +1347,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1906642491730028752}
-  - component: {fileID: 5720333104873800256}
   - component: {fileID: 3775269139108605548}
+  - component: {fileID: 5720333104873800256}
   m_Layer: 0
   m_Name: AreaAttackHit
   m_TagString: Untagged
@@ -1301,22 +1371,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6557672419960889376}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5720333104873800256
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4716328838709604530}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3547d0df720a7c041bf6534d9f050179, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AreaAttack
-  attackCollider: {fileID: 3775269139108605548}
-  areaEffectPrefab1: {fileID: 8904114409888472623, guid: 14ac3d18de0db7243afe9d2c0ee4cabf, type: 3}
-  areaEffectPrefab2: {fileID: 720325515038598322, guid: 4cb26c2439a86c54bb8701483e5e2425, type: 3}
-  footPosition: {fileID: 6557672419960889376}
 --- !u!64 &3775269139108605548
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1339,6 +1393,22 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &5720333104873800256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4716328838709604530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3547d0df720a7c041bf6534d9f050179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AreaAttack
+  attackCollider: {fileID: 3775269139108605548}
+  areaEffectPrefab1: {fileID: 8904114409888472623, guid: 14ac3d18de0db7243afe9d2c0ee4cabf, type: 3}
+  areaEffectPrefab2: {fileID: 720325515038598322, guid: 4cb26c2439a86c54bb8701483e5e2425, type: 3}
+  footPosition: {fileID: 243421778119922629}
 --- !u!1 &4794026709537744450
 GameObject:
   m_ObjectHideFlags: 0
@@ -1728,10 +1798,10 @@ NavMeshAgent:
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_AngularSpeed: 360
+  m_StoppingDistance: 2
   m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
+  m_AutoBraking: 0
   m_AutoRepath: 1
   m_Height: 2
   m_BaseOffset: 0
@@ -1755,8 +1825,9 @@ MonoBehaviour:
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 0
-  LongRange: 10
+  LongRange: 15
   ShortRange: 5
+  EnemyRunning: 0
   attackRange: 4
   minRange: 2
   shortRange: 4
@@ -1822,6 +1893,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HitboxController
   swordAttack: {fileID: 1944312902062985207}
   areaAttack: {fileID: 5720333104873800256}
+  pushAttack: {fileID: 721869511484277184}
 --- !u!114 &3862146569620019789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1847,6 +1919,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnimTrigger
   areaAttack: {fileID: 5720333104873800256}
+  pushAttack: {fileID: 721869511484277184}
 --- !u!1 &5282540327790373397
 GameObject:
   m_ObjectHideFlags: 0

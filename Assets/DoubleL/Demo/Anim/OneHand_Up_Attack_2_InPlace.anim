@@ -111144,13 +111144,6 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 1.3666667
-    functionName: Combowindowend
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
   - time: 1.4666667
     functionName: OnAttackEnd
     data: 
@@ -111160,6 +111153,13 @@ AnimationClip:
     messageOptions: 0
   - time: 1.4666667
     functionName: DisableSwordCollider
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 1.5333333
+    functionName: Combowindowend
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

@@ -26,6 +26,7 @@ public class GameAudioManager : MonoBehaviour
     public AudioClip guardHit;
     public AudioClip AreaAttack;
     public AudioClip dieSE;
+    public AudioClip PlayPushAttack;
 
     private void Awake()
     {
@@ -133,6 +134,10 @@ public class GameAudioManager : MonoBehaviour
     public  void PlayOnDie(Vector3 position)
     {
         PlaySFX(dieSE, position);
+    }
+    public void PlayPushAttackSE(Vector3 position)
+    {
+        PlaySFX(PlayPushAttack, position);
     }
 }
 #endregion

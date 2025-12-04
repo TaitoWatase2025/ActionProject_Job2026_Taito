@@ -85675,14 +85675,14 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 1.0333333
+  - time: 1.5333333
     functionName: Combowindowend
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 1.0666667
+  - time: 2.4
     functionName: OnAttackEnd
     data: 
     objectReferenceParameter: {fileID: 0}

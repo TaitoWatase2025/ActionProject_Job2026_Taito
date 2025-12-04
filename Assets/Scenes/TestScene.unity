@@ -2406,6 +2406,7 @@ MonoBehaviour:
   guardHit: {fileID: 8300000, guid: c6f9ef6841b097e419467b09ffbf55f3, type: 3}
   AreaAttack: {fileID: 8300000, guid: 8c598629b48565f418f70921d3bcd26c, type: 3}
   dieSE: {fileID: 8300000, guid: 0e274f4c3e81f514691f57f63b006681, type: 3}
+  PlayPushAttack: {fileID: 8300000, guid: d0b0226792f3e714bbb9db27329dbbde, type: 3}
 --- !u!4 &2011215145
 Transform:
   m_ObjectHideFlags: 0
@@ -2576,18 +2577,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 6217162630588000024, guid: aed627340042be74486b2681768c9802, type: 3}
-      propertyPath: mainCollider
-      value: 
-      objectReference: {fileID: 6048376750407757830}
-    - target: {fileID: 6217162630588000024, guid: aed627340042be74486b2681768c9802, type: 3}
-      propertyPath: 'ragdollColliders.Array.data[0]'
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 6217162630588000024, guid: aed627340042be74486b2681768c9802, type: 3}
-      propertyPath: 'ragdollRigidbodies.Array.data[0]'
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 7434660975901362413, guid: aed627340042be74486b2681768c9802, type: 3}
       propertyPath: freecamera
       value: 
@@ -2625,11 +2614,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e11ddfcb8ebd0fc448022848b228d348, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
---- !u!143 &6048376750407757830 stripped
-CharacterController:
-  m_CorrespondingSourceObject: {fileID: 8690349223760523019, guid: aed627340042be74486b2681768c9802, type: 3}
-  m_PrefabInstance: {fileID: 3770188634219173752}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

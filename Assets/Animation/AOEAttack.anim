@@ -73174,28 +73174,28 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 1.7666667
-    functionName: OnAreaEfect
+    functionName: EnablePushCollider
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 1.7666667
-    functionName: EnableAreaCollider
+    functionName: OnPushEfect
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 1.7666667
-    functionName: PlayAreaAttackSE
+    functionName: PlayPushAttackSE
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 1.9666667
-    functionName: DisableAreaCollider
+  - time: 2
+    functionName: DisablePushCollider
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

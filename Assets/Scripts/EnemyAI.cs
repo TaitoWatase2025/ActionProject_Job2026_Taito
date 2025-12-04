@@ -29,7 +29,7 @@ public class EnemyAI : MonoBehaviour
     public float attackCooldown = 3f;
     private float lastAttackTime = 0f;
 
-    private enum LastAction { Attack, ShortAttack, BackJump, AreaAttack }
+    private enum LastAction { Attack, ShortAttack, BackJump, AreaAttack, PushAttack, ShortAttack2 }
     private LastAction lastAction;
     private bool isAttacking = false;
 
@@ -54,7 +54,6 @@ public class EnemyAI : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").transform;
         Status = GetComponent<EnemyStatus>();
         agent.stoppingDistance = 1.5f;
-        lastAction = LastAction.AreaAttack;
 
         if (!agent.isOnNavMesh)
             agent.enabled = false;
@@ -219,7 +218,7 @@ public class EnemyAI : MonoBehaviour
         dirToPlayer.Normalize();
         float angle = Vector3.Angle(transform.forward, dirToPlayer);
 
-
+        
         if ((float)Status.health / Status.maxHealth <= 0.5f &&
             distance < shortRange &&
             Random.value < 0.5f &&
@@ -233,7 +232,7 @@ public class EnemyAI : MonoBehaviour
         }
         if (distance < minRange)
         {
-            if (Random.value < 0.5f&& Time.time - lastAttackTime >= attackCooldown)
+            if (Random.value < 0.5f && Time.time - lastAttackTime >= attackCooldown)
             {
                 anim.speed = 1f;
                 anim.SetTrigger("BackJump");
@@ -251,6 +250,15 @@ public class EnemyAI : MonoBehaviour
                 isAttacking = true;
                 return;
             }
+            if (lastAction != LastAction.PushAttack)
+            {
+                anim.speed = Random.Range(0.5f, 2f);
+                anim.SetTrigger("PushAttack");
+                lastAction = LastAction.PushAttack;
+                isAttacking = true;
+                return;
+            }
+
         }
 
         if (distance < attackRange &&
@@ -311,7 +319,11 @@ public class EnemyAI : MonoBehaviour
     {
         GameAudioManager.Instance.PlayAreaAttack(transform.position);
     }
-   
+    public void PlayPushAttackSE()
+    {
+        GameAudioManager.Instance.PlayPushAttackSE(transform.position);
+    }
+
     #endregion
     #region Ž€–S”»’è
     private void HandleDeath()
