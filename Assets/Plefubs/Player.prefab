@@ -697,7 +697,7 @@ Transform:
   m_GameObject: {fileID: 2410599218315102714}
   serializedVersion: 2
   m_LocalRotation: {x: 0.0015608817, y: 0.00030059938, z: -0.000056690595, w: 0.9999988}
-  m_LocalPosition: {x: 0.00081334263, y: 0.9476426, z: -0.006593704}
+  m_LocalPosition: {x: 0.00081334193, y: 0.94764256, z: -0.006594071}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1003,6 +1003,7 @@ GameObject:
   - component: {fileID: 4646033724235474453}
   - component: {fileID: 4936889489015006599}
   - component: {fileID: 8127692197711656511}
+  - component: {fileID: 6217162630588000024}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -1231,7 +1232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29400be72d57fe42a99272639b1b806, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStatus
-  maxHealth: 250
+  maxHealth: 1
   attackPower: 10
   health: 0
   StunTime: 0
@@ -1261,6 +1262,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f96cd75d856fbac4783566edaa7cf78d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HitStoppen
+--- !u!114 &6217162630588000024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3319250103939534823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e3a53272620ce245b717bd7ec3cbf62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerRagdollController
+  ragdollRigidbodies:
+  - {fileID: 0}
+  ragdollColliders:
+  - {fileID: 0}
+  mainCollider: {fileID: 8690349223760523019}
+  animator: {fileID: 148126502097942101}
 --- !u!1 &3514096657682051889
 GameObject:
   m_ObjectHideFlags: 0
@@ -2271,8 +2290,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5604017064972895638}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

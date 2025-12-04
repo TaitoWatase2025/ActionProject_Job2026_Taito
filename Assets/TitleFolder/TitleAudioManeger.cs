@@ -29,7 +29,7 @@ public class TitleAudioManager : MonoBehaviour
     // BGM 再生（フェードイン）
     public void PlayBGM(AudioClip clip, float fadeDuration)
     {
-        if (bgmSource.clip == clip) return;
+        if (bgmSource.clip == clip&&bgmSource.isPlaying) return;
 
         bgmSource.clip = clip;
         bgmSource.volume = 0f;

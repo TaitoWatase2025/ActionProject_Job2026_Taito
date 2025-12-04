@@ -233,7 +233,7 @@ public class EnemyAI : MonoBehaviour
         }
         if (distance < minRange)
         {
-            if (Random.value < 0.5f)
+            if (Random.value < 0.5f&& Time.time - lastAttackTime >= attackCooldown)
             {
                 anim.speed = 1f;
                 anim.SetTrigger("BackJump");

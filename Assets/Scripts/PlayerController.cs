@@ -117,6 +117,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (state == PlayerState.Die) return;
         if (!canContorol)
         {
             AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
@@ -450,7 +451,7 @@ public class PlayerController : MonoBehaviour
         var colliders = GetComponentsInChildren<Collider>();
         foreach (var col in colliders) col.enabled = false; // コライダー無効化
 
-        FindFirstObjectByType<DeathManager>().HandlePlayerDeath();// 死亡処理開始
+        //FindFirstObjectByType<DeathManager>().HandlePlayerDeath();// 死亡処理開始
         GameAudioManager.Instance.StopBGM(8f);
     }
     public void PlayOnDie()

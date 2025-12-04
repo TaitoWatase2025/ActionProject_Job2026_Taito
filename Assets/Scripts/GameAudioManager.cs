@@ -44,8 +44,7 @@ public class GameAudioManager : MonoBehaviour
     #region BGM Methods
     public void PlayBGM(AudioClip clip, float fadeDuration = 1f)
     {
-        if (clip == null) return;
-        if (bgmSource.clip == clip) return;
+        if (bgmSource.clip == clip&&bgmSource.isPlaying) return;
 
         bgmSource.clip = clip;
         bgmSource.volume = 0f;
