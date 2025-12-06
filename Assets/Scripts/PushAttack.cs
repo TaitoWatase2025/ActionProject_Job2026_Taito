@@ -39,7 +39,7 @@ public class PushAttack : MonoBehaviour
                 PlayerController playerController = targetPlayer.GetComponent<PlayerController>();
                 if (enemyStatus != null)
                 {
-                    targetPlayer.TakeDamage(enemyStatus.AttackPower * 0.5f);
+                    targetPlayer.TakeDamage(enemyStatus.AttackPower * 0.1f);
                     if (playerController != null)
                     {
                         playerController.OnPushAttackHit(transform); // ˆø”‚ğTransform‚É•ÏX
