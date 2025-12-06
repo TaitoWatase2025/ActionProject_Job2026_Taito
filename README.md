@@ -8,7 +8,6 @@
 - [プロジェクト概要](#project-overview)
 - [使用予定のUnity機能](#unity-features)
 - [進行スケジュール（目安）](#schedule)
-- [進捗メモ](#progress-notes)
 - [発表内容（予定）](#presentation-plan)
 
 
