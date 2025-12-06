@@ -7,7 +7,7 @@
 ## 目次
 - [プロジェクト概要](#project-overview)
 - [使用予定のUnity機能](#unity-features)
-- [進行スケジュール（目安）](#schedule)
+- [進行スケジュール（メモ）](#schedule)
 - [発表内容（予定）](#presentation-plan)
 
 
@@ -39,7 +39,7 @@
 
 ---
 
-## 進行スケジュール（目安） <a id="schedule"></a>
+## 進行スケジュールメモ <a id="schedule"></a>
 
 | 日 | 内容 | 主な成果物 |
 |----|------|------------|
