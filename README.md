@@ -1,5 +1,6 @@
 # Unity 個人制作「ソウルライク風バトルゲーム」
-
+# 🚫 Job Application Portfolio Only
+このリポジトリは就活用ポートフォリオです。
 指導講師：小西秀明（職業訓練校 Unity講座）
 
 ---
