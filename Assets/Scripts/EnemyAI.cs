@@ -172,7 +172,7 @@ public class EnemyAI : MonoBehaviour
     #region í«ê’
     void ChasePlayer()
     {
-        if (!agent.enabled) return;
+        if (!agent.enabled || animationStoping) return;
 
         var distance = Vector3.Distance(transform.position, player.position);
 

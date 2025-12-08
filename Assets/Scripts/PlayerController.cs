@@ -120,15 +120,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         if (state == PlayerState.Die) return;
-        if (isPushing)
-        {
-            // controller.velocity.magnitudeで移動速度取得
-            if (controller.velocity.magnitude < 0.5f)
-            {
-                isPushing = false;  // 速度低下で終了
-            }
-            return;
-        }
+        if (isPushing) return;
         if (!canContorol)
         {
             AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
@@ -226,7 +218,7 @@ public class PlayerController : MonoBehaviour
     {
         GameAudioManager.Instance.PlayFootstep(transform.position);
     }
-    
+
     #endregion
 
     #region ジャンプ
@@ -382,7 +374,11 @@ public class PlayerController : MonoBehaviour
     }
     public void OnPushAttackHit(Transform enemyTransform)
     {
-        if (isUnderStun) playerStatus.StunTime = 0f; // スタン中なら解除
+        if (isUnderStun)
+        {
+            anim.speed = 1f; // 念のためアニメ速度を戻す
+            StopCurrentStun(); // 既存のスタン処理を停止
+        }
         StartPush(enemyTransform); // Enemyの位置を渡す
     }
     public void OnGuardHit()
@@ -431,8 +427,10 @@ public class PlayerController : MonoBehaviour
 
         state = PlayerState.Idle;
         comboStep = 0;
+        isPushing = true;
         anim.SetInteger("ComboStep", comboStep);
         anim.SetTrigger("PushAttackHit");
+
 
         // Enemyの位置から反対方向を計算
         Vector3 pushDirection = (playerTransform.position - enemyTransform.position).normalized;
@@ -456,6 +454,7 @@ public class PlayerController : MonoBehaviour
             timer += Time.deltaTime;
             yield return null;  // 次のフレームへ
         }
+        isPushing = false; // 押し出し終了
     }
     private IEnumerator PlayStunEffect(float duration)
     {
