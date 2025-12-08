@@ -79,23 +79,36 @@ public class LockOnCamera : MonoBehaviour
 
     void MoveCamera()
     {
-        Vector3 targetPos = player.position + offset;
-        if (currentTarget != null)
+        if (!isLockOn)
         {
-            // ターゲットがいる場合、少しターゲット方向にオフセットを寄せる
-            Vector3 toTarget = (currentTarget.position - player.position).normalized;
-            targetPos += toTarget * 1.5f; // 調整値
+            // 通常カメラ位置
+            transform.position = player.position + offset;
+            return;
         }
-        transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref velocity, moveSmoothTime);
+
+        if (currentTarget == null) return;
+
+        // Player の背後に固定
+        Vector3 behindPos = player.position - player.forward * Mathf.Abs(offset.z) + Vector3.up * offset.y;
+        transform.position = Vector3.SmoothDamp(transform.position, behindPos, ref velocity, moveSmoothTime);
     }
 
     void LookAtTarget()
     {
-        Vector3 lookPos = currentTarget != null ? currentTarget.position : player.position + Vector3.up * 1.5f;
-        Vector3 direction = (lookPos - transform.position).normalized;
-        if (direction.sqrMagnitude > 0.001f)
+        if (!isLockOn || currentTarget == null)
         {
-            Quaternion targetRot = Quaternion.LookRotation(direction);
+            // 通常は Player を向く
+            Vector3 lookPos = player.position + Vector3.up * 1.5f;
+            transform.LookAt(lookPos);
+            return;
+        }
+
+        // ロックオン時は Enemy を画面中央に
+        Vector3 lookPosEnemy = currentTarget.position + Vector3.up * 1.5f;
+        Vector3 dir = (lookPosEnemy - transform.position).normalized;
+        if (dir.sqrMagnitude > 0.001f)
+        {
+            Quaternion targetRot = Quaternion.LookRotation(dir);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotateSpeed * Time.deltaTime);
         }
     }
