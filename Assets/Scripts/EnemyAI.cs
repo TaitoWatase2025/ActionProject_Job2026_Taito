@@ -20,6 +20,7 @@ public class EnemyAI : MonoBehaviour
     public float LongRange = 10f;
     public float ShortRange = 5f;
     public bool EnemyRunning = false;
+    public bool animationStoping = false;
 
     [Header("çUåÇ")]
     public float attackRange = 5f;
@@ -71,6 +72,7 @@ public class EnemyAI : MonoBehaviour
             ApplyGravity();
         }
         anim.SetFloat("Speed", agent.velocity.magnitude);
+        if (animationStoping) return;
 
         switch (state)
         {
@@ -154,7 +156,6 @@ public class EnemyAI : MonoBehaviour
                     anim.SetTrigger("Land");
                     var enemyTransform = this.transform;
                     Vector3 enemyLandingPos = enemyTransform.position;
-                    GameAudioManager.Instance.PlayLanding(false, enemyLandingPos);
 
                     if (!agent.enabled) agent.enabled = true;
                     agent.isStopped = true;
@@ -218,7 +219,7 @@ public class EnemyAI : MonoBehaviour
         dirToPlayer.Normalize();
         float angle = Vector3.Angle(transform.forward, dirToPlayer);
 
-        
+
         if ((float)Status.health / Status.maxHealth <= 0.5f &&
             distance < shortRange &&
             Random.value < 0.5f &&
@@ -280,6 +281,18 @@ public class EnemyAI : MonoBehaviour
             state = EnemyState.Chase;
             agent.isStopped = false;
         }
+    }
+    public void AnimStop()
+    {
+        StartCoroutine(PoseAnuimation());
+    }
+    private IEnumerator PoseAnuimation()
+    {
+        anim.speed = 0f;
+        animationStoping = true;
+        yield return new WaitForSeconds(2f);
+        anim.speed = 1f;
+        animationStoping = false;
     }
 
     bool IsPlayerInAttackRange()

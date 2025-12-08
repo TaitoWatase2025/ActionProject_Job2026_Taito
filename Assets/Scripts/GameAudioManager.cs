@@ -28,6 +28,9 @@ public class GameAudioManager : MonoBehaviour
     public AudioClip dieSE;
     public AudioClip PlayPushAttack;
 
+    [Header("ŠÂ‹«")]
+    public AudioClip StageBreak;
+
     private void Awake()
     {
         if (Instance == null)
@@ -134,6 +137,10 @@ public class GameAudioManager : MonoBehaviour
     public  void PlayOnDie(Vector3 position)
     {
         PlaySFX(dieSE, position);
+    }
+    public void StageBreakSE(Vector3 position)
+    {
+       PlaySFX(StageBreak,position);
     }
     public void PlayPushAttackSE(Vector3 position)
     {

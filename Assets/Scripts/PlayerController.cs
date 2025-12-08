@@ -226,6 +226,7 @@ public class PlayerController : MonoBehaviour
     {
         GameAudioManager.Instance.PlayFootstep(transform.position);
     }
+    
     #endregion
 
     #region ジャンプ
@@ -297,6 +298,7 @@ public class PlayerController : MonoBehaviour
         if (comboInput && comboStep < comboMax)
         {
             comboStep++;
+            playerStatus.attackPower += 10f; // 攻撃力アップ
             anim.SetInteger("ComboStep", comboStep);
             anim.SetTrigger("Attack");
             comboInput = false;
@@ -306,6 +308,7 @@ public class PlayerController : MonoBehaviour
             if (state == PlayerState.Die) return;
             comboStep = 0;
             state = PlayerState.Idle;
+            playerStatus.attackPower = 10f; // 攻撃力リセット
             anim.SetInteger("ComboStep", comboStep);
         }
     }
@@ -343,6 +346,10 @@ public class PlayerController : MonoBehaviour
             isDodging = false;
             state = PlayerState.Idle;
         }
+    }
+    public void PlayDodgeSE()
+    {
+        GameAudioManager.Instance.PlayOnDie(transform.position);
     }
     #endregion
 
@@ -432,7 +439,7 @@ public class PlayerController : MonoBehaviour
 
         // Playerを反対方向に飛ばす
         float pushForce = 15f; // 飛ばす力の大きさ
-                                // コルーチンで滑らかに押し出し開始
+                               // コルーチンで滑らかに押し出し開始
         StartCoroutine(PushCoroutine(pushDirection, pushForce, 0.6f));
     }
     private IEnumerator PushCoroutine(Vector3 direction, float force, float duration)
@@ -485,7 +492,7 @@ public class PlayerController : MonoBehaviour
         isUnderStun = false;
         isStunFinished = true;
     }
-    #endregion
+
 
     private void UpdateAnimator()
     {
@@ -496,6 +503,7 @@ public class PlayerController : MonoBehaviour
         anim.SetInteger("ComboStep", comboStep);
         previousPosition = playerTransform.position;
     }
+    #endregion
     #region 死亡判定
     public void OnDeath()
     {
@@ -509,12 +517,16 @@ public class PlayerController : MonoBehaviour
         var colliders = GetComponentsInChildren<Collider>();
         foreach (var col in colliders) col.enabled = false; // コライダー無効化
 
-        //FindFirstObjectByType<DeathManager>().HandlePlayerDeath();// 死亡処理開始
+        FindFirstObjectByType<Death>().OnPlayerDeath();// 死亡処理開始
+        FindFirstObjectByType<DeathManager>().HandlePlayerDeath();// 死亡処理開始
+
         GameAudioManager.Instance.StopBGM(8f);
     }
     public void PlayOnDie()
     {
         GameAudioManager.Instance.PlayOnDie(transform.position);
+        FindFirstObjectByType<BreakStage>().OnBreakStage();
+
     }
     #endregion
 }

@@ -36,6 +36,7 @@ public class PlayerRagdollController : MonoBehaviour
     public void OnEnableRagdoll()
     {
         isRagdoll = true;
+        
         ExecuteRagdoll();
     }
 
@@ -45,4 +46,5 @@ public class PlayerRagdollController : MonoBehaviour
         mainCollider.enabled = false;
         SetRagdollActive(true);
     }
+    
 }

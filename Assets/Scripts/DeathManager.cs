@@ -11,7 +11,7 @@ public class DeathManager : MonoBehaviour
     public TMP_Text errorText;
 
     [Header("ê›íË")]
-    public string titleSceneName = "Title";
+    public string titleSceneName = "TitleScene";
     public float fadeDuration = 1f;
     public float typeDelay = 0.03f;
     public float textHoldTime = 1f;
