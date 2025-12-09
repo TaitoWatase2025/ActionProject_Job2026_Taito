@@ -478,8 +478,8 @@ RectTransform:
   m_Children:
   - {fileID: 534608552}
   - {fileID: 784463387}
-  - {fileID: 682295333}
   - {fileID: 1280293970}
+  - {fileID: 682295333}
   - {fileID: 1471288964}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -522,8 +522,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -277.047, y: 343.8877}
-  m_SizeDelta: {x: 998.4574, y: 341.5007}
+  m_AnchoredPosition: {x: -295, y: 339}
+  m_SizeDelta: {x: 998.46, y: 119.8615}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &534608553
 MonoBehaviour:
@@ -641,7 +641,7 @@ GameObject:
   - component: {fileID: 682295334}
   - component: {fileID: 682295338}
   m_Layer: 5
-  m_Name: Button
+  m_Name: ExitButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -664,7 +664,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 173.83, y: -259.07}
+  m_AnchoredPosition: {x: 173.83, y: -303}
   m_SizeDelta: {x: 347.6628, y: 72.2242}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &682295334
@@ -746,7 +746,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -772,7 +772,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 682295332}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -810,8 +810,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 404.13, y: 161}
-  m_SizeDelta: {x: 808.2679, y: 227.4353}
+  m_AnchoredPosition: {x: 243, y: 150}
+  m_SizeDelta: {x: 818.4974, y: 183.1075}
   m_Pivot: {x: 0.49999994, y: 0.5}
 --- !u!114 &784463388
 MonoBehaviour:
@@ -860,14 +860,14 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 70.75
+  m_fontSize: 71.65
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -1322,7 +1322,7 @@ GameObject:
   - component: {fileID: 1280293971}
   - component: {fileID: 1280293975}
   m_Layer: 5
-  m_Name: Button
+  m_Name: TittleButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1453,7 +1453,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1280293969}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -1514,7 +1514,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Return to Light
+  m_text: Close Reflection
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1541,7 +1541,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 52.8
+  m_fontSize: 47.6
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1644,7 +1644,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1977,7 +1977,9 @@ MonoBehaviour:
   text2: {fileID: 784463388}
   TitleButton: {fileID: 1280293972}
   ExitButton: {fileID: 682295335}
-  clearBGM: {fileID: 8300000, guid: 45f00b285400d274591b6094c0a525f1, type: 3}
+  clearBGM: {fileID: 8300000, guid: 6d3e1395b48ebd3468b748e3af1dff75, type: 3}
+  hoverSE: {fileID: 8300000, guid: fd38a5e723decd949baf592ce8f3d8c8, type: 3}
+  clickSE: {fileID: 8300000, guid: 5372f457b1999764694e8e810bff0d56, type: 3}
   fadeDuration: 4
 --- !u!4 &2067550690
 Transform:
@@ -1988,7 +1990,7 @@ Transform:
   m_GameObject: {fileID: 2067550688}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1314.9293, y: 638.084, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

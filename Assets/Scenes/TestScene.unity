@@ -1079,7 +1079,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f50f1191422634d4b81bd0705fa1e4f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HiddenTimer
-  targetSeconds: 1
+  targetSeconds: 900
   autoStartOnPlayerInput: 1
   onHiddenAreaSpawn:
     m_PersistentCalls:

@@ -1,8 +1,9 @@
-using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
 using System.Collections;
+using TMPro;
+using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class ClearManager : MonoBehaviour
 {
@@ -15,8 +16,19 @@ public class ClearManager : MonoBehaviour
 
     [Header("Audio")]
     public AudioClip clearBGM;
+    public AudioClip hoverSE;
+    public AudioClip clickSE;
     public float fadeDuration = 2f;
 
+    private void Awake()
+    {
+        if (TitleButton != null) TitleButton.onClick.AddListener(() => OnButtonPressed(true));
+        if (ExitButton != null) ExitButton.onClick.AddListener(() => OnButtonPressed(false));
+        AddHoverEvent(TitleButton.gameObject, () => TitleAudioManager.Instance.PlayUISE(hoverSE));
+        AddHoverEvent(ExitButton.gameObject, () => TitleAudioManager.Instance.PlayUISE(hoverSE));
+        
+
+    }
     private void Start()
     {
         fadeImage.color = Color.white;      
@@ -27,8 +39,7 @@ public class ClearManager : MonoBehaviour
 
         TitleAudioManager.Instance.PlayBGM(clearBGM, fadeDuration);
 
-        if (TitleButton != null) TitleButton.onClick.AddListener(() => OnButtonPressed(true));
-        if (ExitButton != null) ExitButton.onClick.AddListener(() => OnButtonPressed(false));
+        
 
         // 演出開始
         StartCoroutine(ClearSequence());
@@ -41,14 +52,16 @@ public class ClearManager : MonoBehaviour
         yield return StartCoroutine(FadeText(text2, 0f, 1f, 1f));
         TitleButton.gameObject.SetActive(true);
         ExitButton.gameObject.SetActive(true);
-        StartCoroutine(FadeInCanvasGroup(TitleButton.GetComponent<CanvasGroup>(), 1f));
-        StartCoroutine(FadeInCanvasGroup(ExitButton.GetComponent<CanvasGroup>(), 1f));
+        yield return StartCoroutine(FadeInCanvasGroup(ExitButton.GetComponent<CanvasGroup>(), 2f));
+        yield return StartCoroutine(FadeInCanvasGroup(TitleButton.GetComponent<CanvasGroup>(), 2f));
 
     }
 
     public void OnButtonPressed(bool goToTitle)
     {
         StartCoroutine(FadeOutAndLoad(goToTitle));
+        TitleAudioManager.Instance.StopBGM(fadeDuration);
+        TitleAudioManager.Instance.PlayUISE(clickSE);
     }
 
     private IEnumerator FadeOutAndLoad(bool goToTitle)
@@ -107,6 +120,22 @@ public class ClearManager : MonoBehaviour
         cg.alpha = 1f;
         cg.interactable = true; // 完全表示後に押せるように
         cg.blocksRaycasts = true;
-
     }
+    private void AddHoverEvent(GameObject target, System.Action onHover)
+    {
+        // 既存の EventTrigger を取得、なければ追加
+        EventTrigger trigger = target.GetComponent<EventTrigger>();
+        if (trigger == null)
+        {
+            trigger = target.AddComponent<EventTrigger>();
+        }
+        // ホバーイベントを追加
+        EventTrigger.Entry entry = new EventTrigger.Entry
+        {
+            eventID = EventTriggerType.PointerEnter
+        };
+        entry.callback.AddListener((eventData) => { onHover(); });
+        trigger.triggers.Add(entry);
+    }
+
 }
