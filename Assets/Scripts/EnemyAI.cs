@@ -349,6 +349,7 @@ public class EnemyAI : MonoBehaviour
     private IEnumerator RemoveAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
+        GameAudioManager.Instance.PlayMirrerBreak(GameAudioManager.Instance.StageBreak, transform.position);
         Destroy(gameObject);
     }
     public void PlayDieSE()

@@ -1,5 +1,7 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
+using UnityEngine.UIElements;
 
 public class GameAudioManager : MonoBehaviour
 {
@@ -145,6 +147,10 @@ public class GameAudioManager : MonoBehaviour
     public void PlayPushAttackSE(Vector3 position)
     {
         PlaySFX(PlayPushAttack, position);
+    }
+    public void PlayMirrerBreak(AudioClip stageBreak, Vector3 position)
+    {
+        PlaySFX(StageBreak, position);
     }
 }
 #endregion
