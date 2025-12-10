@@ -522,8 +522,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -295, y: 339}
-  m_SizeDelta: {x: 998.46, y: 119.8615}
+  m_AnchoredPosition: {x: -198.63, y: 216}
+  m_SizeDelta: {x: 397.268, y: 122.5454}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &534608553
 MonoBehaviour:
@@ -545,12 +545,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Dreams fade......
-
-'
+  m_text: "Dreams fade......\n\u5922\u306F\u8584\u308C\u3086\u304F"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 111f02364ba54e146a9a82c4a3a5b02a, type: 2}
+  m_sharedMaterial: {fileID: -3707775631655015534, guid: 111f02364ba54e146a9a82c4a3a5b02a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -574,14 +572,14 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
+  m_fontSize: 46.8
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -664,7 +662,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 173.83, y: -303}
+  m_AnchoredPosition: {x: 316, y: -306.68}
   m_SizeDelta: {x: 347.6628, y: 72.2242}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &682295334
@@ -810,8 +808,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 243, y: 150}
-  m_SizeDelta: {x: 818.4974, y: 183.1075}
+  m_AnchoredPosition: {x: 76.398, y: -96.922}
+  m_SizeDelta: {x: 947.3242, y: 193.8431}
   m_Pivot: {x: 0.49999994, y: 0.5}
 --- !u!114 &784463388
 MonoBehaviour:
@@ -833,10 +831,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: and morning quietly spreads across the world.
+  m_text: "and morning quietly spreads across the world.\n\u9759\u5BC2\u306E\u4E2D\u3001\u4E16\u754C\u306B\u671D\u304C\u5E83\u304C\u308B\u3002"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 111f02364ba54e146a9a82c4a3a5b02a, type: 2}
+  m_sharedMaterial: {fileID: -3707775631655015534, guid: 111f02364ba54e146a9a82c4a3a5b02a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -860,7 +858,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 71.65
+  m_fontSize: 46.3
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1345,7 +1343,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -120.45, y: -185}
+  m_AnchoredPosition: {x: -286.7, y: -304.83}
   m_SizeDelta: {x: 240.8964, y: 75.9142}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1280293971

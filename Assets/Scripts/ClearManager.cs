@@ -47,13 +47,13 @@ public class ClearManager : MonoBehaviour
 
     private IEnumerator ClearSequence()
     {
-        yield return StartCoroutine(FadeImage(fadeImage, 1f, 0f, fadeDuration));
-        yield return StartCoroutine(FadeText(text1, 0f, 1f, 1f));
-        yield return StartCoroutine(FadeText(text2, 0f, 1f, 1f));
+        yield return StartCoroutine(FadeImage(fadeImage, 1f, 0f, fadeDuration));// 黒フェードアウト
+        yield return StartCoroutine(FadeText(text1, 0f, 1f, 5f));// テキスト1フェードイン
+        yield return StartCoroutine(FadeText(text2, 0f, 1f, 5f));
         TitleButton.gameObject.SetActive(true);
         ExitButton.gameObject.SetActive(true);
-        yield return StartCoroutine(FadeInCanvasGroup(ExitButton.GetComponent<CanvasGroup>(), 2f));
-        yield return StartCoroutine(FadeInCanvasGroup(TitleButton.GetComponent<CanvasGroup>(), 2f));
+        yield return StartCoroutine(FadeInCanvasGroup(ExitButton.GetComponent<CanvasGroup>(), 5f));
+        yield return StartCoroutine(FadeInCanvasGroup(TitleButton.GetComponent<CanvasGroup>(), 5f));
 
     }
 
