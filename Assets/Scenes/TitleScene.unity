@@ -1159,7 +1159,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &896366556
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1742,7 +1742,7 @@ MonoBehaviour:
   bgmSource: {fileID: 1094831655}
   bgmVolume: 0.5
   uiSource: {fileID: 1986926785}
-  uiVolume: 1
+  uiVolume: 0.3
 --- !u!4 &1186151624
 Transform:
   m_ObjectHideFlags: 0

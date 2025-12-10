@@ -15,7 +15,7 @@ public class TitleMenu : MonoBehaviour
 
         if (sceneFader != null)
         {
-            sceneFader.FadeToScene("TestScene");
+            sceneFader.FadeToScene("TextScene");
         }
     }
     public void OnClickExit()
@@ -52,12 +52,6 @@ public class TitleMenu : MonoBehaviour
             optionButtonGroup.blocksRaycasts = false;
         }));
 
-        // 音量スライダーをフェードイン
-        StartCoroutine(FadeCanvasGroup(volumeSliderGroup, 0f, 1f, fadeDuration, () =>
-        {
-            volumeSliderGroup.interactable = true;
-            volumeSliderGroup.blocksRaycasts = true;
-        }));
         // 音量スライダーをフェードイン
         StartCoroutine(FadeCanvasGroup(volumeSliderGroup, 0f, 1f, fadeDuration, () =>
         {

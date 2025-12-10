@@ -19,11 +19,12 @@ public class UIController : MonoBehaviour
     [Header("ƒ{ƒ^ƒ“Ý’è")]
     [SerializeField] private CanvasGroup buttonGroup;
     [SerializeField] private float buttonFadeDuration = 0.5f;
+
     void Start()
     {
-        StartScreenFadeIn();
-
-        StartIntroSequence();
+        introTextLines.ForEach(t => t.color = new Color(t.color.r, t.color.g, t.color.b, 0f));
+        if(buttonGroup != null)buttonGroup.alpha = 0f;
+        StartScreenFadeIn(StartIntroSequence);
     }
     private IEnumerator FadeCanvasGroup(CanvasGroup group, float from, float to, float duration, Action onComplete = null)
     {
@@ -63,7 +64,6 @@ public class UIController : MonoBehaviour
 
     public void StartIntroSequence()
     {
-        introTextLines.ForEach(t => t.color = new Color(t.color.r, t.color.g, t.color.b, 0f));
         StartCoroutine(IntroSequenceCoroutine());
     }
 
@@ -81,6 +81,6 @@ public class UIController : MonoBehaviour
     }
     public void OnContinueButtonClicked() => StartScreenFadeOut(() =>
     {
-        SceneManager.LoadScene("GameScene");
+        SceneManager.LoadScene("TestScene");
     });
 }
