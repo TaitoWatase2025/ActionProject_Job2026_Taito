@@ -99,7 +99,7 @@ public class PlayerController : MonoBehaviour
         controls.Player.Guard.canceled += ctx => isGuarding = false;
 
         //カメラロックオン(切り替え)
-        controls.Player.Lock.performed += ctx => ToggleLockOn();
+        //controls.Player.Lock.performed += ctx => ToggleLockOn();
 
         // 左右ターゲット切替
         controls.Player.NextTarget.performed += ctx => SwitchTarget(1);

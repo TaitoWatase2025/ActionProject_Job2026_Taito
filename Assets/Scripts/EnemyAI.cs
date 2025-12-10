@@ -181,6 +181,7 @@ public class EnemyAI : MonoBehaviour
             state = EnemyState.Attack;
             return;
         }
+
         agent.isStopped = false;
         agent.destination = player.position;
 
@@ -196,6 +197,21 @@ public class EnemyAI : MonoBehaviour
         else if (distance <= ShortRange)
         {
             agent.speed = 2f; // ‚ä‚Á‚­‚èˆÚ“®
+        }
+        if (distance <= ShortRange)
+        {
+            // ƒvƒŒƒCƒ„[•ûŒü
+            Vector3 direction = (player.position - transform.position).normalized;
+            float angle = Vector3.Angle(transform.forward, direction);
+
+            if (angle > 5f) // ³–Ê‚ÉŒü‚¢‚Ä‚¢‚È‚¯‚ê‚Î‰ñ“]
+            {
+                agent.isStopped = true; // ‰ñ“]’†‚ÍAgent’â~
+                Vector3 cross = Vector3.Cross(transform.forward, direction);
+                float sign = Mathf.Sign(cross.y);
+                float rotationSpeed = 180f; // ‰ñ“]‘¬“x
+                transform.Rotate(0, sign * rotationSpeed * Time.deltaTime, 0);
+            }
         }
 
 
@@ -251,7 +267,7 @@ public class EnemyAI : MonoBehaviour
                 isAttacking = true;
                 return;
             }
-            if (lastAction != LastAction.PushAttack)
+            if (lastAction != LastAction.PushAttack && Random.value < 0.3f)
             {
                 anim.speed = Random.Range(0.5f, 2f);
                 anim.SetTrigger("PushAttack");
@@ -290,9 +306,11 @@ public class EnemyAI : MonoBehaviour
     {
         anim.speed = 0f;
         animationStoping = true;
+        agent.isStopped = true;
         yield return new WaitForSeconds(2f);
         anim.speed = 1f;
         animationStoping = false;
+        agent.isStopped = false;
     }
 
     bool IsPlayerInAttackRange()
