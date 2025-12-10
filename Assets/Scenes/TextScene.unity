@@ -148,7 +148,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b627441f236e8447920b8c633775d93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIAudioContoroller
+  bgmSource: {fileID: 0}
   audioSource: {fileID: 1380848480}
+  BGM: {fileID: 0}
   hoverClip: {fileID: 8300000, guid: fd38a5e723decd949baf592ce8f3d8c8, type: 3}
   clickClip: {fileID: 8300000, guid: 5372f457b1999764694e8e810bff0d56, type: 3}
 --- !u!4 &113411592
@@ -1133,7 +1135,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.3
   m_Pitch: 1
   Loop: 0
   Mute: 0
