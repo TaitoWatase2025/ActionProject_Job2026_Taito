@@ -787,6 +787,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 19822596, guid: d4a05104d1cac46d48fd2fdf0685fbf8, type: 3}
+      propertyPath: InitialModule.startSizeY.minMaxState
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 19822596, guid: d4a05104d1cac46d48fd2fdf0685fbf8, type: 3}
+      propertyPath: InitialModule.startSizeZ.minMaxState
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1720,7 +1728,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1122540860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2533,7 +2541,7 @@ MonoBehaviour:
   spawnDelay: 3
   hiddenTimer: {fileID: 757491945}
   timeSpawnerObject: {fileID: 1122540859}
-  switchTime: 780
+  switchTime: 840
   player: {fileID: 6048376750407757828}
 --- !u!4 &1838825635
 Transform:
@@ -3066,6 +3074,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5521241881908920795, guid: aed627340042be74486b2681768c9802, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7434660975901362413, guid: aed627340042be74486b2681768c9802, type: 3}
       propertyPath: freecamera
       value: 
@@ -3079,9 +3091,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 840466354}
     - target: {fileID: 7434660975901362413, guid: aed627340042be74486b2681768c9802, type: 3}
+      propertyPath: damageCollider
+      value: 
+      objectReference: {fileID: 6048376750407757834}
+    - target: {fileID: 7434660975901362413, guid: aed627340042be74486b2681768c9802, type: 3}
       propertyPath: cameraTransform
       value: 
       objectReference: {fileID: 961739753}
+    - target: {fileID: 8690349223760523019, guid: aed627340042be74486b2681768c9802, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3103,6 +3123,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e11ddfcb8ebd0fc448022848b228d348, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+--- !u!136 &6048376750407757834 stripped
+CapsuleCollider:
+  m_CorrespondingSourceObject: {fileID: 5521241881908920795, guid: aed627340042be74486b2681768c9802, type: 3}
+  m_PrefabInstance: {fileID: 3770188634219173752}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

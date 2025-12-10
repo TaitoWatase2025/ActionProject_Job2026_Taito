@@ -32,29 +32,20 @@ public class PushAttack : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-
             PlayerStatus targetPlayer = other.GetComponent<PlayerStatus>();
             if (targetPlayer != null)
             {
                 PlayerController playerController = targetPlayer.GetComponent<PlayerController>();
                 if (enemyStatus != null)
                 {
-                    if (playerController != null)
-                    {
-                        playerController.OnPushAttackHit(transform); // 引数をTransformに変更
-                    }
-                    Debug.Log("PushAttack Hit Player!");
+                    if (playerController != null) playerController.OnPushAttackHit(transform); // 引数をTransformに変更
                 }
             }
         }
     }
     public void OnAreaEfect()
     {
-        if (footPosition == null)
-        {
-            Debug.LogWarning("FootPositionが設定されていません");
-            return;
-        }
+        if (footPosition == null) return;
         // パーティクルを生成して再生
         if (areaEffectPrefab != null)
         {

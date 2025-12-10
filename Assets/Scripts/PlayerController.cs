@@ -104,11 +104,7 @@ public class PlayerController : MonoBehaviour
         // 左右ターゲット切替
         controls.Player.NextTarget.performed += ctx => SwitchTarget(1);
         controls.Player.PrevTarget.performed += ctx => SwitchTarget(-1);
-
-
     }
-
-
     private void OnEnable() => controls.Player.Enable();
     private void OnDisable() => controls.Player.Disable();
 
@@ -369,6 +365,7 @@ public class PlayerController : MonoBehaviour
     }
     public void OnPushAttackHit(Transform enemyTransform)
     {
+        if(isDodging) return; // 回避中は無効化
         if (isUnderStun)
         {
             anim.speed = 1f; // 念のためアニメ速度を戻す
