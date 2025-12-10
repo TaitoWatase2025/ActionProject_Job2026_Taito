@@ -21,7 +21,6 @@ public class HiddenTimer : MonoBehaviour
     {
         if (isSpawned) return;
         elapsed += Time.unscaledDeltaTime;
-        Debug.Log("[HiddenTimer] 経過時間: " + elapsed + "秒");
         if (elapsed >= targetSeconds)
         {
             isSpawned = true;
@@ -34,7 +33,6 @@ public class HiddenTimer : MonoBehaviour
     {
         if (isSpawned) return;
         elapsed = 0;
-        Debug.Log("[HiddenTimer] カウント開始");
 
     }
 }

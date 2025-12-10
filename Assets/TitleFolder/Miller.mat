@@ -33,12 +33,12 @@ Material:
     - _Cull: 0
     - _Cutoff: 0
     - _Metallic: 1
-    - _PlanarReflectionBlend: 0.7
+    - _PlanarReflectionBlend: 1
     - _Smoothness: 1
     m_Colors:
     - _BaseColor: {r: 0.6693983, g: 0.7764856, b: 0.97735846, a: 1}
     - _Color: {r: 0.66939825, g: 0.7764856, b: 0.9773584, a: 1}
-    - _WaterTint: {r: 0.19999996, g: 0.5, b: 0.8, a: 1}
+    - _WaterTint: {r: 0.6396227, g: 0.8477962, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &7689353139914344344

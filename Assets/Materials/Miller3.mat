@@ -32,7 +32,7 @@ Material:
     m_Floats:
     - _Cull: 0
     - _Metallic: 1
-    - _PlanarReflectionBlend: 0.7
+    - _PlanarReflectionBlend: 1
     - _Smoothness: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 0.9716981, b: 0.9716981, a: 1}
