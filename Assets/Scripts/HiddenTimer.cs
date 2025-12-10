@@ -13,6 +13,11 @@ public class HiddenTimer : MonoBehaviour
 
     private bool isSpawned = false;
     private float elapsed = 0f;
+
+    public float CurrentTime
+    {
+        get { return elapsed; }
+    }
     private void Start()
     {
         StartTimer();

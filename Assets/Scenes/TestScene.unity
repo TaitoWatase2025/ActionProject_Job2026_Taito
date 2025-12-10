@@ -1704,6 +1704,57 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1122540859
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1122540861}
+  - component: {fileID: 1122540860}
+  m_Layer: 0
+  m_Name: TimeSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1122540860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1122540859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c933ab8834b942f41819154835e87c87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyTimerSpawner
+  center: {x: 0, y: 15, z: 0}
+  size: {x: 70, y: 30, z: 70}
+  enemyPrefab: {fileID: 5205967574232431472, guid: b60806eaff62fc94392320f736b699ad, type: 3}
+  enemyHPUIPrefab: {fileID: 6261786316861904, guid: fb2999af9ef9c72488b57d12d7726465, type: 3}
+  airHeight: 5
+  spawnDelay: 3
+  timeInterval: 10
+--- !u!4 &1122540861
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1122540859}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1232937156
 GameObject:
   m_ObjectHideFlags: 0
@@ -2480,6 +2531,9 @@ MonoBehaviour:
   enemyHPUIPrefab: {fileID: 6261786316861904, guid: fb2999af9ef9c72488b57d12d7726465, type: 3}
   airHeight: 5
   spawnDelay: 3
+  hiddenTimer: {fileID: 757491945}
+  timeSpawnerObject: {fileID: 1122540859}
+  switchTime: 780
   player: {fileID: 6048376750407757828}
 --- !u!4 &1838825635
 Transform:
@@ -2782,7 +2836,7 @@ MonoBehaviour:
   bgmSource: {fileID: 1329954722}
   bgmVolume: 0.5
   sfxSource: {fileID: 525763384}
-  sfxVolume: 0.5
+  sfxVolume: 0.3
   Footstep: {fileID: 8300000, guid: de5b402c7e1f69b4d8de81e25bdadaf3, type: 3}
   playerLand: {fileID: 8300000, guid: de5b402c7e1f69b4d8de81e25bdadaf3, type: 3}
   enemyLand: {fileID: 8300000, guid: de5b402c7e1f69b4d8de81e25bdadaf3, type: 3}
@@ -3063,6 +3117,7 @@ SceneRoots:
   - {fileID: 1464013291}
   - {fileID: 1112160070}
   - {fileID: 1838825635}
+  - {fileID: 1122540861}
   - {fileID: 130133197}
   - {fileID: 225840888}
   - {fileID: 92582967}

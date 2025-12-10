@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class EnemySpawner : MonoBehaviour
+public class EnemyTimerSpawner : MonoBehaviour
 {
     [Header("スポーン範囲")]
     public Vector3 center;
@@ -15,62 +15,28 @@ public class EnemySpawner : MonoBehaviour
     public float airHeight = 3f;
     public float spawnDelay = 1f;
 
-    [Header("タイマー移行設定")]
-    public HiddenTimer hiddenTimer;         // ★HiddenTimerへの参照
-    public GameObject timeSpawnerObject;   // ★EnemyTimeSpawnerがアタッチされたGameObjectへの参照
-    public float switchTime = 900f;        // ★切り替え時間 (15分 = 900秒)
+    [Header("時間スポーン設定")]
+    public float timeInterval = 60f; // 1分 = 60秒
+    private Coroutine spawnCoroutine;
 
-    private Coroutine currentSpawnCoroutine; // ★現在のコルーチンを保持するための変数
 
-    private int spawnCount = 1;
-    private int aliveEnemies = 0;
-    private bool firstSpawnDone = false;
-    public PlayerController player;
-
-    void Update()
+    void OnEnable()
     {
-        if (!firstSpawnDone && PlayerHasMoved())
+        spawnCoroutine = StartCoroutine(TimeSpawnLoop());
+    }
+    void OnDisable()
+    {
+        if (spawnCoroutine != null)
         {
-            firstSpawnDone = true;
-            currentSpawnCoroutine = StartCoroutine(SpawnWave());
-        }
-        if (firstSpawnDone && hiddenTimer != null && hiddenTimer.CurrentTime >= switchTime)
-        {
-            SwitchToTimeSpawner();
+            StopCoroutine(spawnCoroutine);
         }
     }
-
-    bool PlayerHasMoved()
+    IEnumerator TimeSpawnLoop()
     {
-        return player != null && player.moveSpeed > 0.1f;
-    }
-    IEnumerator SpawnWave()
-    {
-        for (int i = 0; i < spawnCount; i++)
+        while (true)
+        {
+            yield return new WaitForSeconds(timeInterval);
             SpawnEnemy();
-
-        while (aliveEnemies > 0)
-            yield return null;
-
-        spawnCount++;
-        yield return new WaitForSeconds(spawnDelay);
-        currentSpawnCoroutine = StartCoroutine(SpawnWave());
-    }
-    void SwitchToTimeSpawner()
-    {
-        // 1. 現在のスポーンを停止
-        if (currentSpawnCoroutine != null)
-        {
-            StopCoroutine(currentSpawnCoroutine);
-        }
-
-        // 2. このオブジェクト(EnemySpawner)を非アクティブ化
-        gameObject.SetActive(false);
-
-        // 3. 時間スポーナーをアクティブ化
-        if (timeSpawnerObject != null)
-        {
-            timeSpawnerObject.SetActive(true);
         }
     }
     void SpawnEnemy()
@@ -80,7 +46,6 @@ public class EnemySpawner : MonoBehaviour
         pos.y += airHeight;
 
         GameObject enemy = Instantiate(enemyPrefab, pos, Quaternion.identity);
-        aliveEnemies++;
 
         // HPバー生成（World Space Canvas）- Enemyの子として生成
         if (enemyHPUIPrefab != null)
@@ -112,10 +77,6 @@ public class EnemySpawner : MonoBehaviour
                 };
             }
         }
-
-        // 敵死亡通知
-        EnemyDeathNotifier notifier = enemy.AddComponent<EnemyDeathNotifier>();
-        notifier.onDeath = () => { aliveEnemies--; };
     }
 
     Vector3 GetRandomPosition()
@@ -129,11 +90,11 @@ public class EnemySpawner : MonoBehaviour
 }
 
 // 敵死亡通知用
-public class EnemyDeathNotifier : MonoBehaviour
-{
-    public System.Action onDeath;
-    void OnDestroy() => onDeath?.Invoke();
-}
+//public class EnemyDeathNotifier : MonoBehaviour
+//{
+//    public System.Action onDeath;
+//    void OnDestroy() => onDeath?.Invoke();
+//}
 
 
 
